@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+  .navbar-scrolled {
+    background-color: rgba(36, 35, 35, 0.7); /* negro tenue */
+    backdrop-filter: blur(3px); /* opcional: desenfoque de fondo */
+    transition: background-color 0.3s ease;
+    height: 80px;
+    
+  }
