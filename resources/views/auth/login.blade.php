@@ -16,14 +16,14 @@
         </div>
     @endif
 
-    <div class="w-full sm:max-w-md px-6 py-4 bg-zinc-800 shadow-md overflow-hidden sm:rounded-lg">
+    <div class="w-full sm:max-w-md px-6 py-4 bg-[#121212] shadow-md overflow-hidden sm:rounded-lg">
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
             {{-- Email Address --}}
             <div>
                 <label for="email" class="block text-sm font-medium text-white">Email</label>
-                <input id="email" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm text-black" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username">
+                <input id="email" class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400" type="email" name="email" value="{{ old('email') }}" placeholder="email@example.com" required autofocus autocomplete="username">
                 @error('email')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -32,7 +32,7 @@
             {{-- Password --}}
             <div class="mt-4">
                 <label for="password" class="block text-sm font-medium text-white">Password</label>
-                <input id="password" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm text-black" type="password" name="password" required autocomplete="current-password">
+                <input id="password" class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400" type="password" name="password" placeholder="password" required autocomplete="current-password">
                 @error('password')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -49,7 +49,7 @@
             {{-- Actions --}}
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-white hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    <a class="text-sm text-white underline hover:text-gray-300" href="{{ route('password.request') }}">
                         Forgot your password?
                     </a>
                 @endif

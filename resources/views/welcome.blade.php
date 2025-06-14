@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <title>Independent insurance consultant</title>
 
   @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -19,13 +20,10 @@
     <ul class="hidden md:flex space-x-6 font-semibold p-2">
       <li><a href="#home" class="hover:text-gray-300">Home</a></li>
       <li><a href="#about" class="hover:text-gray-300">About</a></li>
-      <li><a href="#blog" class="hover:text-gray-300">Services</a></li>
+      <li><a href="#services" class="hover:text-gray-300">Services</a></li>
       <li><a href="#testmonial" class="hover:text-gray-300">Reviews</a></li>
       <li><a href="#contact" class="hover:text-gray-300">Contact Us</a></li>
     </ul>
-
-
-
 
 
     <!-- Mobile menu button -->
@@ -42,55 +40,59 @@
       <img src="{{ asset('imgs/loge.png') }}" alt="Logo" class="h-20 md:h-20">
     </a>
 
-    <!-- Right nav -->
-    <ul class="hidden md:flex space-x-4 font-semibold">
-      @if (Route::has('login'))
-        @auth
+    <ul class="hidden md:flex space-x-4 font-semibold items-center relative">
+  @if (Route::has('login'))
+    @auth
+      <li x-data="{ open: false }" class="relative">
+        <!-- Botón con la letra inicial igual -->
+        <button @click="open = !open" @click.away="open = false"
+                class="hover:text-gray-300 focus:outline-none">
+          {{ Auth::user()->name }}
+        </button>
+
+        <!-- Menú desplegable -->
+        <ul x-show="open" x-transition
+            @mouseenter="open = true" @mouseleave="open = false"
+            class="absolute right-[-20px] mt-2 w-48 bg-zinc-800 text-white rounded-md shadow-lg z-50 text-right"
+            style="display: none;"
+        >
           <li>
-           <li class="relative group">
-               <button class="hover:text-gray-300 focus:outline-none">
-                {{ Auth::user()->name }}
-               </button>
-               <ul class="absolute right-0 mt-2 w-44 bg-zinc-800 text-white rounded-md shadow-lg 
-                           opacity-0 group-hover:opacity-100 
-                           pointer-events-none group-hover:pointer-events-auto 
-                           translate-y-2 group-hover:translate-y-0 
-                           transform transition-all duration-200 z-50">
-             <li>
-               <a href="{{ url('/dashboard') }}" class="block px-4 py-2 hover:bg-zinc-700">Dashboard</a>
-             </li>
-             <li>
-               <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-zinc-700">Edit Profile</a>
-             </li>
-         <li>
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-zinc-700">Log out</button>
-          </form>
-        </li>
-  </ul>
-   
-        @else
-          <li>
-            <a href="{{ route('login') }}" class="bg-blue-800 text-white px-4 py-1 rounded hover:bg-blue-700">
-              Log in
-            </a>
+            <a href="{{ url('/dashboard') }}" class="block px-4 py-2 hover:bg-zinc-700">Dashboard</a>
           </li>
-          @if (Route::has('register'))
-            <li>
-              <a href="{{ route('register') }}" class="hover:text-gray-300">Register</a>
-            </li>
-          @endif
-        @endauth
+          <li>
+            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-zinc-700">Edit Profile</a>
+          </li>
+          <li>
+            <form method="POST" action="{{ route('logout') }}">
+              @csrf
+              <button type="submit" class="w-full text-right px-4 py-2 hover:bg-zinc-700">
+                Log out
+              </button>
+            </form>
+          </li>
+        </ul>
+      </li>
+    @else
+      <li>
+        <a href="{{ route('login') }}" class="bg-blue-800 text-white px-4 py-1 rounded hover:bg-blue-700">
+          Log in
+        </a>
+      </li>
+      @if (Route::has('register'))
+        <li>
+          <a href="{{ route('register') }}" class="hover:text-gray-300">Register</a>
+        </li>
       @endif
-    </ul>
-  </div>
+    @endauth
+  @endif
+</ul>
+
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="md:hidden hidden px-4 pt-2 pb-4 space-y-2 font-semibold bg-black bg-opacity-80">
     <a href="#home" class="block hover:text-gray-300">Home</a>
     <a href="#about" class="block hover:text-gray-300">About</a>
-    <a href="#blog" class="block hover:text-gray-300">Services</a>
+    <a href="#services" class="block hover:text-gray-300">Services</a>
     <a href="#testmonial" class="block hover:text-gray-300">Reviews</a>
     <a href="#contact" class="block hover:text-gray-300">Contact Us</a>
     @if (Route::has('login'))
@@ -115,20 +117,13 @@
   <div class="absolute inset-0 bg-black bg-opacity-75 flex flex-col justify-center items-center text-center text-white px-4">
     <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Independent Insurance Consultant</h1>
     <h2 class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6">Coverage for your business</h2>
-    <a href="{{ asset('views/quote.html') }}" class="bg-blue-800 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded">
+    <a href="{{ route('quote') }}" class="bg-blue-800 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded">
       Get a quote
     </a>
   </div>
 </header>
 
-<script>
-  const toggleBtn = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
 
-  toggleBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-</script>
 
 
 
@@ -144,7 +139,7 @@
 
     <!-- Texto derecha -->
     <div class="w-full md:w-1/2 md:pl-8">
-      <h2 class="text-3xl md:text-4xl font-semibold mb-4">About Us</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">ABOUT US</h2>
       <p class="text-gray-300 mb-6">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, quisquam accusantium nostrum modi, nemo, officia veritatis ipsum facere maxime assumenda voluptatum enim! Labore maiores placeat impedit, vero sed est voluptas! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita alias dicta autem, maiores doloremque quo perferendis, ut obcaecati harum,
       </p>
@@ -164,8 +159,8 @@
 
    
    <!-- OUR SERVICES Section -->
-<section id="blog" class="w-full bg-zinc-800 text-white py-12 px-4 md:px-8 text-center scroll-mt-20">
-  <h2 class="text-3xl md:text-4xl font-semibold mb-8">OUR SERVICES</h2>
+<section id="services" class="w-full bg-zinc-800 text-white py-12 px-4 md:px-8 text-center scroll-mt-20">
+  <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">OUR SERVICES</h2>
 
   <!-- Tabs -->
   <div class="flex justify-center mb-10">
@@ -177,48 +172,79 @@
 </div>
 
 
-  <!-- Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+ <!-- Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
 
-    <!-- Card 1 -->
-    <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden">
-      <img src="{{ asset('imgs/blog-1.jpg') }}" alt="MS-150" class="w-full h-56 object-cover">
-      <div class="p-6">
-        <div class="mb-4">
-          <span class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded">MS-150</MS-150></span>
-        </div>
-        <p class="text-gray-300 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa provident illum officiis fugit laudantium voluptatem sit iste delectus qui ex.</p>
+  <!-- Card 1 -->
+  <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+    <img src="{{ asset('imgs/blog-1.jpg') }}" alt="MS-150" class="w-full h-56 object-cover">
+    <div class="p-6 flex-1 flex flex-col">
+      <div class="mb-4">
+        <a href="{{ route('quote') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+         Insurance policies
+        </a>
       </div>
+      <p class="text-gray-300 text-sm flex-1">
+        Protect your business and personal vehicle: We provide personalized quotes for commercial and personal insurance. We analyze your needs and offer you the right coverage options. A quote is free, and we'll help you make an informed decision.
+      </p>
     </div>
-
-    <!-- Card 2 -->
-    <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden">
-      <img src="{{ asset('imgs/blog-2.jpeg') }}" alt="MC BOC-3" class="w-full h-56 object-cover">
-      <div class="p-6">
-        <div class="mb-4">
-          <span class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded">MC BOC-3</span>
-        </div>
-        <p class="text-gray-300 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa provident illum officiis fugit laudantium voluptatem sit iste delectus qui ex.</p>
-      </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden">
-      <img src="{{ asset('imgs/blog-3.jpeg') }}" alt="UCR 2025" class="w-full h-56 object-cover">
-      <div class="p-6">
-        <div class="mb-4">
-          <span class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded">UCR 2025</span>
-        </div>
-        <p class="text-gray-300 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa provident illum officiis fugit laudantium voluptatem sit iste delectus qui ex.</p>
-      </div>
-    </div>
-
   </div>
+
+  <!-- Card 2 -->
+  <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+    <img src="{{ asset('imgs/blog-2.jpeg') }}" alt="MC BOC-3" class="w-full h-56 object-cover">
+    <div class="p-6 flex-1 flex flex-col">
+      <div class="mb-4">
+        <a href="{{ route('nueva_compañia') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+          Creation of companies
+        </a>
+      </div>
+      <p class="text-gray-300 text-sm flex-1">
+      Company creation from scratch (US DOT number). We help you with the FMCSA application.      </p>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+    <img src="{{ asset('imgs/blog-3.jpeg') }}" alt="UCR 2025" class="w-full h-56 object-cover">
+    <div class="p-6 flex-1 flex flex-col">
+      <div class="mb-4">
+        <a  href="{{ route('regulatorios') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+          Regulatory permits
+        </a>
+      </div>
+      <p class="text-gray-300 text-sm flex-1">
+        MC Number: Reinstatement (revoked or dismissed) or new application.<br>
+        BOC-3, UCR, DOT Reinstatement.<br>
+        Company Registration (Articles of Incorporation).<br>
+        MVR, Criminal Background Check (state or national), BOIR.
+      </p>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+    <img src="{{ asset('imgs/factoring.jpg') }}" alt="UCR 2025" class="w-full h-56 object-cover">
+    <div class="p-6 flex-1 flex flex-col">
+      <div class="mb-4">
+        <a href="{{ route('factoring') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+          Factoring
+        </a>
+      </div>
+      <p class="text-gray-300 text-sm flex-1">
+        Having trouble paying your freight? We'll take care of it.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+
 </section>
 
 
    <!-- REVIEWS Section -->
-<section id="testmonial" class="w-full bg-zinc-900 text-white py-16 border-t border-gray-800 scroll-mt-20">
+<section id="testmonial" class="w-full bg-zinc-900 text-white py-16 border-t border-gray-800 scroll-mt-20 h-[500px]">
   <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">REVIEWS</h2>
 
@@ -250,60 +276,54 @@
 </section>
 
 
-    <!-- CONTACT Section -->
-<div id="contact" class="w-full bg-zinc-800 text-white border-t border-gray-700">
-  <div class="flex flex-col md:flex-row">
-    
-    <!-- Mapa -->
-    <div class="w-full md:w-1/2 min-h-[400px]">
-      <div id="map" class="w-full h-full min-h-[400px]"></div>
-    </div>
+  <!-- CONTACT Section -->
+  <div id="contact" class="w-full bg-zinc-800 text-white border-t border-gray-700">
+    <div class="flex flex-col md:flex-row">
+      
+      <!-- Mapa -->
+  <div id="map" ></div>
 
-    <!-- Información de contacto -->
-    <div class="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center">
-      <h3 class="text-2xl font-semibold mb-4">FIND US</h3>
-      <p class="text-gray-300 mb-6">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, laboriosam doloremque odio delectus, sunt magnam laborum impedit molestiae, magni quae ipsum, ullam eos! Alias suscipit impedit et, adipisci illo quam.</p>
-      <div class="text-gray-400 space-y-2 text-sm">
-        <p><span class="pr-2">📍</span> 7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
-        <p><span class="pr-2">📞</span> (765) 244-5222</p>
-        <p><span class="pr-2">✉️</span> info@website.com</p>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+
+
+      <!-- Información de contacto -->
+      <div class="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center">
+        <h3 class="text-2xl font-semibold mb-4">FIND US</h3>
+        <p class="text-gray-300 mb-6">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, laboriosam doloremque odio delectus, sunt magnam laborum impedit molestiae, magni quae ipsum, ullam eos! Alias suscipit impedit et, adipisci illo quam.
+        </p>
+        <div class="text-gray-400 space-y-2 text-sm">
+          <p><span class="pr-2">📍</span> 7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
+          <p><span class="pr-2">📞</span> (765) 244-5222</p>
+          <p><span class="pr-2">✉️</span> info@website.com</p>
+        </div>
       </div>
-    </div>
 
+    </div>
   </div>
-</div>
 
-<!-- PAGE FOOTER -->
-<div class="w-full bg-zinc-900 text-white border-t border-gray-700 text-center py-10">
-  <div class="flex flex-col sm:flex-row justify-center sm:justify-between gap-6 max-w-4xl mx-auto">
+  <!-- Footer -->
+    <footer class="bg-zinc-900 text-white border-t border-gray-700 text-center py-10">
+        <div class="flex flex-col sm:flex-row justify-center sm:justify-between gap-6 max-w-4xl mx-auto">
+            <div>
+                <h3 class="text-lg font-semibold mb-1">EMAIL US</h3>
+                <p class="text-gray-400 text-sm">info@website.com</p>
+            </div>
 
-    <div>
-      <h3 class="text-lg font-semibold mb-1">EMAIL US</h3>
-      <p class="text-gray-400 text-sm">info@website.com</p>
-    </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-1">CALL US</h3>
+                <p class="text-gray-400 text-sm">(765) 244-5222</p>
+            </div>
 
-    <div>
-      <h3 class="text-lg font-semibold mb-1">CALL US</h3>
-      <p class="text-gray-400 text-sm">(765) 244-5222</p>
-    </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-1">FIND US</h3>
+                <p class="text-gray-400 text-sm">7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
+            </div>
+        </div>
+    </footer>
 
-    <div>
-      <h3 class="text-lg font-semibold mb-1">FIND US</h3>
-      <p class="text-gray-400 text-sm">7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
-    </div>
-
-  </div>
-</div>
-
-<!-- Bottom Footer -->
-<div class="w-full bg-zinc-900 text-gray-500 text-center border-t border-gray-700 py-4 text-sm">
-  <p class="mb-0">&copy; Copyright <script>document.write(new Date().getFullYear())</script><span class=" hover:text-white"> Independent Insurance Consultant. Todos los derechos reservados.</span></p>
-</div>
-
-<!-- Google Maps Script -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtme10pzgKSPeJVJrG1O3tjR6lk98o4w8&callback=initMap"></script>
-
-    
 </body>
 </html>
  

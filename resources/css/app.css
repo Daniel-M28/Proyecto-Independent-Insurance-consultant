@@ -10,3 +10,18 @@
     height: 80px;
     
   }
+
+  /*evitar inputs blancos con autocompletado*/
+  input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px #27272a inset !important; /* bg-zinc-800 */
+  -webkit-text-fill-color: #f4f4f5 !important; /* text-gray-100 */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
+/*Mapa de inicio*/
+ #map {
+      height: 300px;
+      width: 40%;
+    }
+  

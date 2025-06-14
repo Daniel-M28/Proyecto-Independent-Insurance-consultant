@@ -28,5 +28,28 @@ Alpine.start();
       navbar.classList.remove('navbar-scrolled');
     }
   });
+     //mapa inicio
+      const coords = [39.889185, -86.043100]; // Coordenadas de la dirección
+      const map = L.map('map').setView(coords, 15);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.marker(coords).addTo(map)
+        .bindPopup('7399 N. Shadeland Avenue<br>#230, Indianapolis, IN 46250')
+        .openPopup();
 });
 
+
+//Menu hamburguesa
+  const toggleBtn = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  toggleBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+
+  //Mapa pagina de inicio
+  
