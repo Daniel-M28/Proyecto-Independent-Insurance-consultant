@@ -2,10 +2,18 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Acceder a vista de administrador
+Route::middleware(['auth', 'verified', 'can:admin.users.index'])
+    ->resource('users', UserController::class)
+    ->names('admin.users');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

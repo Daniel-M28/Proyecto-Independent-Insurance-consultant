@@ -21,6 +21,13 @@
                    class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
                     View My Policy
                 </a>
+
+                 @can('admin.users.index')
+                 <a href="{{ route('admin.users.index') }}"
+                    class="px-8 py-4 bg-blue-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                     Users
+                </a>
+                @endcan
             </div>
         </div>
     </div>
