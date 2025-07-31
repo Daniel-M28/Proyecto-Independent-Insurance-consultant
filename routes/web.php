@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
-
+use App\Http\Controllers\CertificadoController;
 
 
 Route::get('/', function () {
@@ -14,6 +14,14 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified', 'can:admin.users.index'])
     ->resource('users', UserController::class)
     ->names('admin.users');
+
+//Certificados
+Route::get('/certificados', [CertificadoController::class, 'index'])->name('certificados.index');
+Route::post('/certificados', [CertificadoController::class, 'store'])->name('certificados.store');
+Route::delete('/certificados', [CertificadoController::class, 'destroy'])->name('certificados.destroy');
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

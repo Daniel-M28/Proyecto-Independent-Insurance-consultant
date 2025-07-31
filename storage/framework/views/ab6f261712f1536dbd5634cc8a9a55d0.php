@@ -8,9 +8,9 @@
 
   <title>Independent insurance consultant</title>
 
-  @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-  @endif
+  <?php if(file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot'))): ?>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+  <?php endif; ?>
 </head>
 
 <body id="home">
@@ -39,17 +39,18 @@
 
     <!-- Logo center -->
     <a href="#" class="absolute left-1/2 transform -translate-x-1/2 pt-4">
-      <img src="{{ asset('imgs/loge.png') }}" alt="Logo" class="h-20 md:h-20">
+      <img src="<?php echo e(asset('imgs/loge.png')); ?>" alt="Logo" class="h-20 md:h-20">
     </a>
 
     <ul class="hidden md:flex space-x-4 font-semibold items-center relative">
-  @if (Route::has('login'))
-    @auth
+  <?php if(Route::has('login')): ?>
+    <?php if(auth()->guard()->check()): ?>
       <li x-data="{ open: false }" class="relative">
         <!-- Botón con la letra inicial igual -->
         <button @click="open = !open" @click.away="open = false"
                 class="hover:text-gray-300 focus:outline-none">
-          {{ Auth::user()->name }}
+          <?php echo e(Auth::user()->name); ?>
+
         </button>
 
         <!-- Menú desplegable -->
@@ -59,14 +60,14 @@
             style="display: none;"
         >
           <li>
-            <a href="{{ url('/dashboard') }}" class="block px-4 py-2 hover:bg-zinc-700">Dashboard</a>
+            <a href="<?php echo e(url('/dashboard')); ?>" class="block px-4 py-2 hover:bg-zinc-700">Dashboard</a>
           </li>
           <li>
-            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-zinc-700">Edit Profile</a>
+            <a href="<?php echo e(route('profile.edit')); ?>" class="block px-4 py-2 hover:bg-zinc-700">Edit Profile</a>
           </li>
           <li>
-            <form method="POST" action="{{ route('logout') }}">
-              @csrf
+            <form method="POST" action="<?php echo e(route('logout')); ?>">
+              <?php echo csrf_field(); ?>
               <button type="submit" class="w-full text-right px-4 py-2 hover:bg-zinc-700">
                 Log out
               </button>
@@ -74,19 +75,19 @@
           </li>
         </ul>
       </li>
-    @else
+    <?php else: ?>
       <li>
-        <a href="{{ route('login') }}" class="bg-blue-800 text-white px-4 py-1 rounded hover:bg-blue-700">
+        <a href="<?php echo e(route('login')); ?>" class="bg-blue-800 text-white px-4 py-1 rounded hover:bg-blue-700">
           Log in
         </a>
       </li>
-      @if (Route::has('register'))
+      <?php if(Route::has('register')): ?>
         <li>
-          <a href="{{ route('register') }}" class="hover:text-gray-300">Register</a>
+          <a href="<?php echo e(route('register')); ?>" class="hover:text-gray-300">Register</a>
         </li>
-      @endif
-    @endauth
-  @endif
+      <?php endif; ?>
+    <?php endif; ?>
+  <?php endif; ?>
 </ul>
 
 
@@ -97,16 +98,16 @@
     <a href="#services" class="block hover:text-gray-300">Services</a>
     <a href="#testmonial" class="block hover:text-gray-300">Reviews</a>
     <a href="#contact" class="block hover:text-gray-300">Contact Us</a>
-    @if (Route::has('login'))
-      @auth
-        <a href="{{ url('/dashboard') }}" class="block hover:text-gray-300"> {{ Auth::user()->name }}</a>
-      @else
-        <a href="{{ route('login') }}" class="block hover:text-gray-300">Log in</a>
-        @if (Route::has('register'))
-          <a href="{{ route('register') }}" class="block hover:text-gray-300">Register</a>
-        @endif
-      @endauth
-    @endif
+    <?php if(Route::has('login')): ?>
+      <?php if(auth()->guard()->check()): ?>
+        <a href="<?php echo e(url('/dashboard')); ?>" class="block hover:text-gray-300"> <?php echo e(Auth::user()->name); ?></a>
+      <?php else: ?>
+        <a href="<?php echo e(route('login')); ?>" class="block hover:text-gray-300">Log in</a>
+        <?php if(Route::has('register')): ?>
+          <a href="<?php echo e(route('register')); ?>" class="block hover:text-gray-300">Register</a>
+        <?php endif; ?>
+      <?php endif; ?>
+    <?php endif; ?>
   </div>
 </nav>
 
@@ -115,11 +116,11 @@
 
 
 <!-- Hero Section -->
-<header id="home" class="relative w-full h-screen bg-cover bg-center" style="background-image: url('{{ asset('imgs/main.jpg') }}');">
+<header id="home" class="relative w-full h-screen bg-cover bg-center" style="background-image: url('<?php echo e(asset('imgs/main.jpg')); ?>');">
   <div class="absolute inset-0 bg-black bg-opacity-75 flex flex-col justify-center items-center text-center text-white px-4">
     <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Independent Insurance Consultant</h1>
     <h2 class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6">Coverage for your business</h2>
-    <a href="{{ route('quote') }}" class="bg-blue-800 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded">
+    <a href="<?php echo e(route('quote')); ?>" class="bg-blue-800 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded">
       Get a quote
     </a>
   </div>
@@ -136,7 +137,7 @@
     
     <!-- Imagen izquierda -->
     <div class="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
-      <img src="{{ asset('imgs/about-section.png') }}" alt="About Image" class="w-64 md:w-80 lg:w-[28rem]">
+      <img src="<?php echo e(asset('imgs/about-section.png')); ?>" alt="About Image" class="w-64 md:w-80 lg:w-[28rem]">
     </div>
 
     <!-- Texto derecha -->
@@ -179,10 +180,10 @@
 
   <!-- Card 1 -->
   <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
-    <img src="{{ asset('imgs/blog-1.jpg') }}" alt="MS-150" class="w-full h-56 object-cover">
+    <img src="<?php echo e(asset('imgs/blog-1.jpg')); ?>" alt="MS-150" class="w-full h-56 object-cover">
     <div class="p-6 flex-1 flex flex-col">
       <div class="mb-4">
-        <a href="{{ route('quote') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+        <a href="<?php echo e(route('quote')); ?>" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
          Insurance policies
         </a>
       </div>
@@ -194,10 +195,10 @@
 
   <!-- Card 2 -->
   <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
-    <img src="{{ asset('imgs/blog-2.jpeg') }}" alt="MC BOC-3" class="w-full h-56 object-cover">
+    <img src="<?php echo e(asset('imgs/blog-2.jpeg')); ?>" alt="MC BOC-3" class="w-full h-56 object-cover">
     <div class="p-6 flex-1 flex flex-col">
       <div class="mb-4">
-        <a href="{{ route('nueva_compañia') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+        <a href="<?php echo e(route('nueva_compañia')); ?>" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
           Creation of companies
         </a>
       </div>
@@ -208,10 +209,10 @@
 
   <!-- Card 3 -->
   <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
-    <img src="{{ asset('imgs/blog-3.jpeg') }}" alt="UCR 2025" class="w-full h-56 object-cover">
+    <img src="<?php echo e(asset('imgs/blog-3.jpeg')); ?>" alt="UCR 2025" class="w-full h-56 object-cover">
     <div class="p-6 flex-1 flex flex-col">
       <div class="mb-4">
-        <a  href="{{ route('regulatorios') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+        <a  href="<?php echo e(route('regulatorios')); ?>" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
           Regulatory permits
         </a>
       </div>
@@ -226,10 +227,10 @@
 
   <!-- Card 4 -->
   <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
-    <img src="{{ asset('imgs/factoring.jpg') }}" alt="UCR 2025" class="w-full h-56 object-cover">
+    <img src="<?php echo e(asset('imgs/factoring.jpg')); ?>" alt="UCR 2025" class="w-full h-56 object-cover">
     <div class="p-6 flex-1 flex flex-col">
       <div class="mb-4">
-        <a href="{{ route('factoring') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+        <a href="<?php echo e(route('factoring')); ?>" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
           Factoring
         </a>
       </div>
@@ -329,3 +330,4 @@
 </body>
 </html>
  
+<?php /**PATH C:\xampp\htdocs\proyecto_iic\resources\views/welcome.blade.php ENDPATH**/ ?>
