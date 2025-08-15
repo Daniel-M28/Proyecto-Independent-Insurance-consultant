@@ -87,6 +87,19 @@
                     });
                   </script>
                 </div>
+<div class="col-span-1 md:col-span-2">
+    <label for="correo1" class="block text-white mb-2">Correo destinatario (obligatorio):</label>
+    <input type="email" id="correo1" name="correo1"class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded" placeholder="ejemplo@correo.com" required>
+
+    <label for="correo2" class="block text-white mb-2">Segundo correo (opcional):</label>
+    <input type="email" id="correo2" name="correo2" class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded" placeholder="opcional@correo.com">
+
+    <button id="enviarCorreo" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">
+        Enviar PDF por correo
+    </button>
+</div>
+
+
             <button id="editarPdf" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
                 Descargar PDF Editado
             </button>
@@ -201,6 +214,81 @@ firstPage.drawText(fecha, {
         document.body.removeChild(link);
     });
 </script>
+
+<script>
+    // Función específica para enviar el PDF editado por correo
+    document.getElementById('enviarCorreo').addEventListener('click', async () => {
+        const correo1 = document.getElementById('correo1').value.trim();
+        const correo2 = document.getElementById('correo2').value.trim();
+
+        if (!correo1 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo1)) {
+            return alert('Ingresa un correo válido (obligatorio).');
+        }
+
+        if (correo2 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo2)) {
+            return alert('El segundo correo no es válido.');
+        }
+
+        if (!currentPdfUrl) {
+            return alert('Primero selecciona un PDF.');
+        }
+
+        // Reutiliza tu lógica de edición del PDF (debes tener esta función ya en tu código)
+        const existingPdfBytes = await fetch(currentPdfUrl).then(res => res.arrayBuffer());
+        const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+        const firstPage = pdfDoc.getPages()[0];
+
+        const empresa = document.getElementById('empresa').value || 'Empresa Ejemplo S.A.';
+        const fecha = document.getElementById('fecha').value || new Date().toLocaleDateString();
+        const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+        // Dibuja empresa
+        firstPage.drawRectangle({ x: 45, y: 98, width: 200, height: 30, color: PDFLib.rgb(1, 1, 1) });
+        const lines = empresa.split('\n');
+        let startY = 98;
+        lines.forEach((line) => {
+            firstPage.drawText(line, {
+                x: 45,
+                y: startY,
+                size: 10,
+                font: font,
+                color: PDFLib.rgb(0, 0, 0),
+            });
+            startY -= 10;
+        });
+
+        // Dibuja fecha
+        firstPage.drawRectangle({ x: 530, y: 745, width: 50, height: 10, color: PDFLib.rgb(1, 1, 1) });
+        firstPage.drawText(fecha, { x: 530, y: 745, size: 8, font: font, color: PDFLib.rgb(0, 0, 0) });
+
+        // Guarda PDF en blob
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+        // Enviar al servidor
+        const formData = new FormData();
+        formData.append('pdf', blob, 'certificado_editado.pdf');
+        formData.append('correo1', correo1);
+        if (correo2) formData.append('correo2', correo2);
+
+        fetch("<?php echo e(route('certificados.sendPdf')); ?>", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || 'Correo(s) enviado(s) correctamente.');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al enviar el correo.');
+        });
+    });
+</script>
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\proyecto_iic\resources\views/certificados/index.blade.php ENDPATH**/ ?>

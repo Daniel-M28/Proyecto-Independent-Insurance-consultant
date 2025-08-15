@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+
 
 class CertificadoController extends Controller
 {
@@ -37,11 +39,37 @@ class CertificadoController extends Controller
 
         // Usar el nombre original del archivo para guardarlo 
         $fileName = $file->getClientOriginalName();
-        $file->storeAs('certificados', $fileName, 'public');
+        $file->storeAs('certificados', $fileName, );
 ;
 
         return redirect()->route('certificados.index')->with('success', 'PDF subido correctamente.');
     }
+
+public function sendPdf(Request $request)
+{
+    if ($request->hasFile('pdf')) {
+        $pdfFile = $request->file('pdf');
+        $fileName = 'certificado_editado_' . time() . '.pdf';
+        $path = $pdfFile->storeAs('temp_pdfs', $fileName,);
+
+        $emails = array_filter([
+        $request->input('correo1'), // Obligatorio
+        $request->input('correo2')  // Opcional
+        ]);
+
+        foreach ($emails as $email) {
+            Mail::to($email)->send(new \App\Mail\CertificadoPdfMail($fileName));
+        }
+
+        // Limpieza opcional del archivo temporal después de enviar
+        Storage::delete($path);
+
+        return response()->json(['message' => 'PDF enviado correctamente']);
+    }
+
+    return response()->json(['message' => 'No se encontró el archivo'], 400);
+}
+
 
     public function destroy(Request $request)
     {
