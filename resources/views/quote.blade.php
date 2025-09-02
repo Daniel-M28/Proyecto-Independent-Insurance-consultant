@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+
+
 <div class="bg-[#1e1e2f] text-gray-200 font-sans mt-16">
   <div class="flex flex-col lg:flex-row max-w-7xl mx-auto min-h-screen">
 

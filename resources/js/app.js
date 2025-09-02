@@ -53,3 +53,43 @@ Alpine.start();
 
   //Mapa pagina de inicio
   
+
+  //boton lenguajes
+
+  
+// resources/js/app.js
+
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".btn-lang");
+
+    // Inicializamos Google Translate con inglés por defecto
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en', // idioma por defecto
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+    window.googleTranslateElementInit = googleTranslateElementInit;
+
+    // Función para cambiar idioma dinámicamente
+    function changeLanguage(lang) {
+        const select = document.querySelector(".goog-te-combo");
+        if (select) {
+            select.value = lang;
+            select.dispatchEvent(new Event("change"));
+        }
+    }
+
+    // Listener de botones de banderas
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            const lang = button.getAttribute("data-lang");
+            changeLanguage(lang);
+            localStorage.setItem("lang", lang); // guardamos preferencia
+        });
+    });
+
+    // Al cargar, aplicamos idioma guardado o inglés por defecto
+    const savedLang = localStorage.getItem("lang") || "en";
+    changeLanguage(savedLang);
+});

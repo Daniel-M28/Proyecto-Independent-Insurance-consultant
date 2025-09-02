@@ -25,6 +25,9 @@
       <li><a href="#services" class="hover:text-gray-300">Services</a></li>
       <li><a href="#testmonial" class="hover:text-gray-300">Reviews</a></li>
       <li><a href="#contact" class="hover:text-gray-300">Contact Us</a></li>
+      <button id="langToggle" class="btn-lang">
+                      <span id="langLabel">EN</span>
+                  </button>
     </ul>
 
 
