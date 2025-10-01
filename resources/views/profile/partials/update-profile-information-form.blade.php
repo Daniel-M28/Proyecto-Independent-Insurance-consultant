@@ -22,57 +22,63 @@
         @csrf
         @method('patch')
 
-        <!-- Name -->
-        <div>
-            <label for="name" class="block text-sm font-medium text-white">{{ __('Name') }}</label>
-            <input
-                id="name"
-                name="name"
-                type="text"
-                x-model="form.name"
-                required
-                autofocus
-                autocomplete="name"
-                class="mt-1 block w-full bg-zinc-800 border border-gray-600 text-white rounded-md shadow-sm focus:ring-indigo-500"
-            />
-            <template x-if="errors.name">
-                <p class="mt-2 text-sm text-red-500" x-text="errors.name[0]"></p>
-            </template>
-        </div>
+       <!-- Name -->
+<div>
+    <label for="name" class="block text-sm font-medium text-white">{{ __('Name') }}</label>
+    <input
+        id="name"
+        name="name"
+        type="text"
+        x-model="form.name"
+        required
+        autofocus
+        autocomplete="name"
+        class="mt-1 block w-full bg-zinc-800  text-white rounded-md shadow-sm rounded-md 
+               focus:outline-none focus:ring-0 "
+        @cannot('edit-name') readonly @endcannot
+    />
+    <template x-if="errors.name">
+        <p class="mt-2 text-sm text-red-500" x-text="errors.name[0]"></p>
+    </template>
+</div>
 
-        <!-- Email -->
-        <div>
-            <label for="email" class="block text-sm font-medium text-white">{{ __('Email') }}</label>
-            <input
-                id="email"
-                name="email"
-                type="email"
-                x-model="form.email"
-                required
-                autocomplete="username"
-                class="mt-1 block w-full bg-zinc-800 border border-gray-600 text-white rounded-md shadow-sm focus:ring-indigo-500"
-            />
-            <template x-if="errors.email">
-                <p class="mt-2 text-sm text-red-500" x-text="errors.email[0]"></p>
-            </template>
+<!-- Last Name -->
+<div>
+    <label for="lastname" class="block text-sm font-medium text-white">{{ __('Last Name') }}</label>
+    <input
+        id="lastname"
+        name="lastname"
+        type="text"
+        x-model="form.lastname"
+        required
+        autocomplete="family-name"
+        class="mt-1 block w-full bg-zinc-800  text-white rounded-md 
+               focus:outline-none focus:ring-0 "
+        @cannot('edit-name') readonly @endcannot
+    />
+    <template x-if="errors.lastname">
+        <p class="mt-2 text-sm text-red-500" x-text="errors.lastname[0]"></p>
+    </template>
+</div>
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div class="mt-2">
-                    <p class="text-sm text-gray-300">
-                        {{ __('Your email address is unverified.') }}
-                        <button form="send-verification" class="underline text-sm text-indigo-400 hover:text-indigo-600 focus:outline-none">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
+<!-- Email -->
+<div>
+    <label for="email" class="block text-sm font-medium text-white">{{ __('Email') }}</label>
+    <input
+        id="email"
+        name="email"
+        type="email"
+        x-model="form.email"
+        required
+        autocomplete="username"
+        class="mt-1 block w-full bg-zinc-800 border border-gray-600 text-white rounded-md shadow-sm "
+    />
+    <template x-if="errors.email">
+        <p class="mt-2 text-sm text-red-500" x-text="errors.email[0]"></p>
+    </template>
+    
+</div>
 
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
-        </div>
 
         <!-- Botón + Mensaje -->
         <div class="flex items-center gap-4">
@@ -95,6 +101,7 @@
             success: false,
             form: {
                 name: @json(old('name', $user->name)),
+                lastname: @json(old('lastname', $user->lastname)),
                 email: @json(old('email', $user->email)),
             },
             errors: {},

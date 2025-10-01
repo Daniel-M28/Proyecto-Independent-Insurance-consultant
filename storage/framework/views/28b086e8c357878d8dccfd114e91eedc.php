@@ -46,6 +46,7 @@
                     <input
                         id="password"
                         name="password"
+                        lastname="password"
                         type="password"
                         placeholder="<?php echo e(__('Password')); ?>"
                         class="w-3/4 mt-1 bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:ring focus:ring-red-500"

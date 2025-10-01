@@ -1,10 +1,9 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="flex justify-center mt-10">
     <div class="w-full max-w-5xl bg-[#1e1e1e] p-6 rounded-xl shadow-lg">
         <h1 class="text-2xl font-semibold text-white mb-6 text-center">Gestión de Certificados de aseguranza</h1>
 
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('certificados.index')): ?>
         
         <form action="<?php echo e(route('certificados.store')); ?>" method="POST" enctype="multipart/form-data" class="bg-[#2c2f33] p-6 rounded-md shadow mb-6">
             <?php echo csrf_field(); ?>
@@ -16,6 +15,7 @@
                 Subir PDF
             </button>
         </form>
+        <?php endif; ?>
 
         
         <h4 class="text-white text-lg font-semibold mb-4">Archivos disponibles:</h4>
@@ -26,6 +26,7 @@
                          <?php echo e($pdf['name']); ?>
 
                     </span>
+                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('certificados.index')): ?>
                     <form action="<?php echo e(route('certificados.destroy')); ?>" method="POST" onsubmit="return confirm('¿Eliminar este PDF?')">
                         <?php echo csrf_field(); ?>
                         <?php echo method_field('DELETE'); ?>
@@ -34,6 +35,7 @@
                             Eliminar
                         </button>
                     </form>
+                    <?php endif; ?>
                 </li>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </ul>

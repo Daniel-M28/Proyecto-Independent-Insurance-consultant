@@ -1,4 +1,28 @@
 <?php $__env->startSection('content'); ?>
+
+<?php if(session('status')): ?>
+    <div id="alert-status" 
+         class="fixed top-4 left-1/2 transform -translate-x-1/2 
+                bg-green-600 text-white p-4 rounded mb-4 text-center shadow-lg 
+                z-50 w-[90%] md:w-auto">
+        <?php echo e(session('status')); ?>
+
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alertBox = document.getElementById('alert-status');
+            if (alertBox) {
+                alertBox.style.transition = "opacity 0.5s ease";
+                alertBox.style.opacity = "0";
+                setTimeout(() => alertBox.remove(), 400); // elimina después del fade
+            }
+        }, 3000); // ⏳ 5 segundos
+    </script>
+<?php endif; ?>
+
+
+
    <div class="py-12 mt-16">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="p-6 text-white text-center">

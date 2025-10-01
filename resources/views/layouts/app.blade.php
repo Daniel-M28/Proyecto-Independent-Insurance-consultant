@@ -7,6 +7,8 @@
     
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -57,7 +59,7 @@
                         <!-- Usuario logueado -->
                         <li class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                             <button class="flex items-center space-x-2 focus:outline-none">
-                                <span>{{ auth()->user()->name }}</span>
+                                <span>{{ auth()->user()->name }}  {{ auth()->user()->lastname }}   </span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 9l-7 7-7-7" />
@@ -145,16 +147,23 @@
 
 
     <!-- Aquí insertamos el contenido de cada vista -->
-    <main class="pt-8 pb-2  max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Aquí insertamos el contenido de cada vista -->
+    @if (!empty($fullWidth) && $fullWidth === true)
+        {{-- Renderizamos el contenido sin el wrapper con estilos --}}
         @yield('content')
-    </main>
+    @else
+        {{-- Renderizamos el contenido con el wrapper y estilos por defecto --}}
+        <main class="pt-8 pb-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            @yield('content')
+        </main>
+    @endif
 
     <!-- Footer -->
     <footer class="mt-16 bg-zinc-900 text-white border-t border-gray-700 text-center py-10">
         <div class="flex flex-col sm:flex-row justify-center sm:justify-between gap-6 max-w-4xl mx-auto">
             <div>
                 <h3 class="text-lg font-semibold mb-1">EMAIL US</h3>
-                <p class="text-gray-400 text-sm">info@website.com</p>
+                <p class="text-gray-400 text-sm">info@insuranceconsultantapp.com</p>
             </div>
 
             <div>

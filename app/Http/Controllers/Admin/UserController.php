@@ -18,7 +18,7 @@ class UserController extends Controller
 
     $users = \App\Models\User::when($search, function ($query, $search) {
         return $query->where('name', 'like', "%{$search}%")
-                     ->orWhere('email', 'like', "%{$search}%");
+                     ->orWhere('lastname', 'like', "%{$search}%");
     })
     ->orderBy('created_at', 'desc')
     ->paginate(10)
@@ -69,18 +69,27 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
 {
-    // Validar que los roles enviados existan (seguridad)
+    // Validar los datos
     $request->validate([
-        'roles' => 'nullable|array',
-        'roles.*' => 'exists:roles,id',
+        'name' => ['required', 'string', 'max:255'],
+        'lastname' => ['nullable', 'string', 'max:255'],
+        'roles' => ['nullable', 'array'],
+        'roles.*' => ['exists:roles,id'],
     ]);
 
-    // Asignar o sincronizar los roles al usuario
+    // Actualizar nombre y apellido
+    $user->update([
+        'name' => $request->name,
+        'lastname' => $request->lastname,
+    ]);
+
+    // Sincronizar roles
     $user->roles()->sync($request->input('roles', []));
 
     return redirect()->route('admin.users.index')
-        ->with('success', 'Los roles del usuario se han actualizado correctamente.');
+        ->with('success', 'El usuario se actualizó correctamente.');
 }
+
 
 
     /**

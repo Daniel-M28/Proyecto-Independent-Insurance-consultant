@@ -26,28 +26,27 @@
     <!-- Nombre y apellidos -->
     <div>
       <label class="block mb-1 font-semibold">Nombre y Apellidos</label>
-      <input type="text" name="nombre" placeholder="Ejemplo: Juan Pérez"
-        class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400">
+      <input type="text" name="nombre" pattern="^[A-Za-z\s]+$" maxlength="30" placeholder="Ejemplo: Juan Pérez"
+        class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400" required>
     </div>
 
     <!-- Correo electrónico -->
     <div>
       <label class="block mb-1 font-semibold">Correo Electrónico</label>
-      <input type="email" name="correo" placeholder="correo@ejemplo.com"
+      <input type="email" name="correo" maxlength="255" placeholder="correo@ejemplo.com"
         class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400">
     </div>
 
     <!-- Teléfono -->
     <div>
-      <label class="block mb-1 font-semibold">Teléfono</label>
-      <input type="tel" name="telefono" placeholder="Ejemplo: 555-1234"
-        class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400">
-    </div>
+          <label for="phone" class="block mb-1 font-semibold">Phone Number</label>
+          <input type="tel" id="phone-personal" name="phone" placeholder="Example (555) 123-4567" inputmode="numeric" pattern="^(\(\d{3}\)\s?|\d{3}[-\s]?)\d{3}[-\s]?\d{4}$" maxlength="20" class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400" required>
+        </div>
 
     <!-- Observaciones o solicitud -->
     <div>
       <label class="block mb-1 font-semibold">Observaciones – Solicitud de permiso o trámite</label>
-      <textarea name="observaciones" rows="4" placeholder="Describe aquí tu solicitud..."
+      <textarea name="observaciones" rows="4"  name="observations" maxlength="500" placeholder="Describe aquí tu solicitud..."
         class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400"></textarea>
     </div>
 

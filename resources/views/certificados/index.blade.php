@@ -5,6 +5,7 @@
     <div class="w-full max-w-5xl bg-[#1e1e1e] p-6 rounded-xl shadow-lg">
         <h1 class="text-2xl font-semibold text-white mb-6 text-center">Gestión de Certificados de aseguranza</h1>
 
+        @can('certificados.index')
         {{-- Formulario para subir PDF --}}
         <form action="{{ route('certificados.store') }}" method="POST" enctype="multipart/form-data" class="bg-[#2c2f33] p-6 rounded-md shadow mb-6">
             @csrf
@@ -16,6 +17,7 @@
                 Subir PDF
             </button>
         </form>
+        @endcan
 
         {{-- Lista de archivos --}}
         <h4 class="text-white text-lg font-semibold mb-4">Archivos disponibles:</h4>
@@ -25,6 +27,7 @@
                     <span class="cursor-pointer hover:underline" onclick="loadPdf('{{ $pdf['url'] }}')">
                          {{ $pdf['name'] }}
                     </span>
+                     @can('certificados.index')
                     <form action="{{ route('certificados.destroy') }}" method="POST" onsubmit="return confirm('¿Eliminar este PDF?')">
                         @csrf
                         @method('DELETE')
@@ -33,6 +36,7 @@
                             Eliminar
                         </button>
                     </form>
+                    @endcan
                 </li>
             @endforeach
         </ul>

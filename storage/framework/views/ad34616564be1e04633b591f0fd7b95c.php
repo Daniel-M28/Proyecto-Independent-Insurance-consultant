@@ -24,60 +24,63 @@
         <?php echo csrf_field(); ?>
         <?php echo method_field('patch'); ?>
 
-        <!-- Name -->
-        <div>
-            <label for="name" class="block text-sm font-medium text-white"><?php echo e(__('Name')); ?></label>
-            <input
-                id="name"
-                name="name"
-                type="text"
-                x-model="form.name"
-                required
-                autofocus
-                autocomplete="name"
-                class="mt-1 block w-full bg-zinc-800 border border-gray-600 text-white rounded-md shadow-sm focus:ring-indigo-500"
-            />
-            <template x-if="errors.name">
-                <p class="mt-2 text-sm text-red-500" x-text="errors.name[0]"></p>
-            </template>
-        </div>
+       <!-- Name -->
+<div>
+    <label for="name" class="block text-sm font-medium text-white"><?php echo e(__('Name')); ?></label>
+    <input
+        id="name"
+        name="name"
+        type="text"
+        x-model="form.name"
+        required
+        autofocus
+        autocomplete="name"
+        class="mt-1 block w-full bg-zinc-800  text-white rounded-md shadow-sm rounded-md 
+               focus:outline-none focus:ring-0 "
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->denies('edit-name')): ?> readonly <?php endif; ?>
+    />
+    <template x-if="errors.name">
+        <p class="mt-2 text-sm text-red-500" x-text="errors.name[0]"></p>
+    </template>
+</div>
 
-        <!-- Email -->
-        <div>
-            <label for="email" class="block text-sm font-medium text-white"><?php echo e(__('Email')); ?></label>
-            <input
-                id="email"
-                name="email"
-                type="email"
-                x-model="form.email"
-                required
-                autocomplete="username"
-                class="mt-1 block w-full bg-zinc-800 border border-gray-600 text-white rounded-md shadow-sm focus:ring-indigo-500"
-            />
-            <template x-if="errors.email">
-                <p class="mt-2 text-sm text-red-500" x-text="errors.email[0]"></p>
-            </template>
+<!-- Last Name -->
+<div>
+    <label for="lastname" class="block text-sm font-medium text-white"><?php echo e(__('Last Name')); ?></label>
+    <input
+        id="lastname"
+        name="lastname"
+        type="text"
+        x-model="form.lastname"
+        required
+        autocomplete="family-name"
+        class="mt-1 block w-full bg-zinc-800  text-white rounded-md 
+               focus:outline-none focus:ring-0 "
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->denies('edit-name')): ?> readonly <?php endif; ?>
+    />
+    <template x-if="errors.lastname">
+        <p class="mt-2 text-sm text-red-500" x-text="errors.lastname[0]"></p>
+    </template>
+</div>
 
-            <?php if($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail()): ?>
-                <div class="mt-2">
-                    <p class="text-sm text-gray-300">
-                        <?php echo e(__('Your email address is unverified.')); ?>
+<!-- Email -->
+<div>
+    <label for="email" class="block text-sm font-medium text-white"><?php echo e(__('Email')); ?></label>
+    <input
+        id="email"
+        name="email"
+        type="email"
+        x-model="form.email"
+        required
+        autocomplete="username"
+        class="mt-1 block w-full bg-zinc-800 border border-gray-600 text-white rounded-md shadow-sm "
+    />
+    <template x-if="errors.email">
+        <p class="mt-2 text-sm text-red-500" x-text="errors.email[0]"></p>
+    </template>
+    
+</div>
 
-                        <button form="send-verification" class="underline text-sm text-indigo-400 hover:text-indigo-600 focus:outline-none">
-                            <?php echo e(__('Click here to re-send the verification email.')); ?>
-
-                        </button>
-                    </p>
-
-                    <?php if(session('status') === 'verification-link-sent'): ?>
-                        <p class="mt-2 font-medium text-sm text-green-400">
-                            <?php echo e(__('A new verification link has been sent to your email address.')); ?>
-
-                        </p>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
-        </div>
 
         <!-- Botón + Mensaje -->
         <div class="flex items-center gap-4">
@@ -101,6 +104,7 @@
             success: false,
             form: {
                 name: <?php echo json_encode(old('name', $user->name), 512) ?>,
+                lastname: <?php echo json_encode(old('lastname', $user->lastname), 512) ?>,
                 email: <?php echo json_encode(old('email', $user->email), 512) ?>,
             },
             errors: {},

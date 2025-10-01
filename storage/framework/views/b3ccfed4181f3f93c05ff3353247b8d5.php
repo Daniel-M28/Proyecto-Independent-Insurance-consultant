@@ -11,7 +11,7 @@
             type="text"
             name="search"
             value="<?php echo e(request('search')); ?>"
-            placeholder="Buscar por nombre o email..."
+            placeholder="Buscar por nombre o apellido"
             class="w-1/2 px-4 py-2 bg-zinc-800 border border-zinc-700 text-white rounded-l-md focus:outline-none  focus:ring-blue-500 placeholder-gray-400"
         />
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">

@@ -25,36 +25,49 @@ class ProfileController extends Controller
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+{
+    $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+    // Obtener los datos validados del request
+    $data = $request->validated();
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // Si NO tiene permiso, eliminamos name y lastname del array
+    if (! $user->can('edit-name')) {
+        unset($data['name'], $data['lastname']);
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+    // Llenar el modelo con los datos permitidos
+    $user->fill($data);
 
+    // Si cambia el email, se resetea la verificación
+    if ($user->isDirty('email')) {
+        $user->email_verified_at = null;
+    }
+
+    // Guardar cambios
+    $user->save();
+
+    return Redirect::route('profile.edit')->with('status', 'profile-updated');
+}
+
+ public function destroy(Request $request)
+    {
         $user = $request->user();
 
+        // cerrar sesión
         Auth::logout();
 
+        // borrar usuario
         $user->delete();
 
+        // invalidar sesión actual
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        // Redirigir a la página de inicio con mensaje flash
+    return redirect('/')->with('status', 'Tu usuario ha sido eliminado correctamente.'); // redirigir al inicio después de borrar
     }
+
+
+
 }
