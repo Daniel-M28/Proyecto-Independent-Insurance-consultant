@@ -66,4 +66,8 @@
         </form>
     </div>
 </div>
+<!-- Botón back -->
+    <div class="mt-6">
+        <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to list</a>
+    </div>
 @endsection

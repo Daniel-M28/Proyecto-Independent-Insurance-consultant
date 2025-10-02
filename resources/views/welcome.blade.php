@@ -77,15 +77,15 @@
   <!-- Tabs -->
   <div class="flex justify-center mb-10">
   <div class="flex gap-2">
-    <button class="bg-pink-600 text-white px-4 py-2 rounded font-semibold m-0">
+      <button class="bg-pink-600 text-white px-4 py-2 rounded font-semibold m-0">
       Regulatory requirements
-    </button>
+      </button>
+    </div>
   </div>
-</div>
 
 
- <!-- Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
+  <!-- Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
 
   <!-- Card 1 -->
   <div class="bg-zinc-900 border border-gray-700 rounded-md overflow-hidden flex flex-col transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
@@ -121,7 +121,7 @@
     <img src="{{ asset('imgs/blog-3.jpeg') }}" alt="UCR 2025" class="w-full h-56 object-cover">
     <div class="p-6 flex-1 flex flex-col">
       <div class="mb-4">
-        <a  href="{{ route('regulatorios') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
+        <a  href="{{ route('regulatorios_form') }}" class="bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-pink-500 hover:shadow-md cursor-pointer">
           Regulatory permits
         </a>
       </div>
@@ -149,8 +149,7 @@
     </div>
   </div>
 
-</div>
-
+  </div>
 
 </section>
 

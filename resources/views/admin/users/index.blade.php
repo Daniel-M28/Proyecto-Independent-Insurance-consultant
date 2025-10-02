@@ -21,9 +21,9 @@
 
     {{-- Tabla --}}
     <div class="overflow-x-auto rounded-lg shadow-inner">
-        <table class="min-w-full divide-y divide-zinc-700 bg-zinc-800 text-center">
+        <table class="min-w-full border border-zinc-700 bg-zinc-800 text-center">
             <thead class="bg-zinc-700 text-sm uppercase text-gray-300">
-                <tr>
+                <tr class="divide-x divide-zinc-600">
                     <th class="px-6 py-3">ID</th>
                     <th class="px-6 py-3">Nombre</th>
                     <th class="px-6 py-3">Apellido</th>
@@ -35,7 +35,7 @@
             </thead>
             <tbody class="divide-y divide-zinc-700 text-sm">
                 @forelse($users as $user)
-                    <tr class="hover:bg-zinc-700">
+                    <tr class="hover:bg-zinc-700 divide-x divide-zinc-600">
                         <td class="px-6 py-4">{{ $user->id }}</td>
                         <td class="px-6 py-4">{{ $user->name }}</td>
                         <td class="px-6 py-4">{{ $user->lastname }}</td>
@@ -45,37 +45,40 @@
                         <td class="px-6 py-4 flex justify-center gap-2">
                             {{-- Botón Editar --}}
                             <a href="{{ route('admin.users.edit', $user->id) }}"
-                           class="inline-block px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 h-10 flex items-center justify-center">
-                            Editar
+                               class="inline-block px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 h-10 flex items-center justify-center">
+                                Editar
                             </a>
-               
+
                             {{-- Botón Eliminar --}}
                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
-                              onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                            class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 h-10 flex items-center justify-center">
-                            Eliminar
-                            </button>
-                              </form>
+                                  onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 h-10 flex items-center justify-center">
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
-                   </tr>
-                
+                    </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-400">No hay usuarios registrados.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-400">No hay usuarios registrados.</td>
                     </tr>
                 @endforelse
-           </tbody>
+            </tbody>
         </table>
     </div>
 
     {{-- Paginación --}}
-   <div class="mt-6 flex justify-center pagination">
-    {{ $users->links() }}
-</div>
+    <div class="mt-6 flex justify-center pagination">
+        {{ $users->links() }}
+    </div>
 
 </div>
 
+<!-- Botón back -->
+<div class="mt-6">
+    <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to list</a>
+</div>
 @endsection

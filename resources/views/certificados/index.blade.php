@@ -110,6 +110,12 @@
     </div>
 </div>
 
+
+<!-- Botón back -->
+    <div class="mt-6">
+        <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to list</a>
+    </div>
+
 {{-- Scripts --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
@@ -291,5 +297,6 @@ firstPage.drawText(fecha, {
         });
     });
 </script>
+
 
 @endsection

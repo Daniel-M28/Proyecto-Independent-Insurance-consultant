@@ -21,9 +21,9 @@
 
     
     <div class="overflow-x-auto rounded-lg shadow-inner">
-        <table class="min-w-full divide-y divide-zinc-700 bg-zinc-800 text-center">
+        <table class="min-w-full border border-zinc-700 bg-zinc-800 text-center">
             <thead class="bg-zinc-700 text-sm uppercase text-gray-300">
-                <tr>
+                <tr class="divide-x divide-zinc-600">
                     <th class="px-6 py-3">ID</th>
                     <th class="px-6 py-3">Nombre</th>
                     <th class="px-6 py-3">Apellido</th>
@@ -35,7 +35,7 @@
             </thead>
             <tbody class="divide-y divide-zinc-700 text-sm">
                 <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <tr class="hover:bg-zinc-700">
+                    <tr class="hover:bg-zinc-700 divide-x divide-zinc-600">
                         <td class="px-6 py-4"><?php echo e($user->id); ?></td>
                         <td class="px-6 py-4"><?php echo e($user->name); ?></td>
                         <td class="px-6 py-4"><?php echo e($user->lastname); ?></td>
@@ -45,39 +45,43 @@
                         <td class="px-6 py-4 flex justify-center gap-2">
                             
                             <a href="<?php echo e(route('admin.users.edit', $user->id)); ?>"
-                           class="inline-block px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 h-10 flex items-center justify-center">
-                            Editar
+                               class="inline-block px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 h-10 flex items-center justify-center">
+                                Editar
                             </a>
-               
+
                             
                             <form action="<?php echo e(route('admin.users.destroy', $user->id)); ?>" method="POST"
-                              onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
-                            <?php echo csrf_field(); ?>
-                            <?php echo method_field('DELETE'); ?>
-                            <button type="submit"
-                            class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 h-10 flex items-center justify-center">
-                            Eliminar
-                            </button>
-                              </form>
+                                  onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
+                                <button type="submit"
+                                        class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 h-10 flex items-center justify-center">
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
-                   </tr>
-                
+                    </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-400">No hay usuarios registrados.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-400">No hay usuarios registrados.</td>
                     </tr>
                 <?php endif; ?>
-           </tbody>
+            </tbody>
         </table>
     </div>
 
     
-   <div class="mt-6 flex justify-center pagination">
-    <?php echo e($users->links()); ?>
+    <div class="mt-6 flex justify-center pagination">
+        <?php echo e($users->links()); ?>
+
+    </div>
 
 </div>
 
+<!-- Botón back -->
+<div class="mt-6">
+    <a href="<?php echo e(route('dashboard')); ?>" class="text-gray-400 hover:underline">← Back to list</a>
 </div>
-
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\proyecto_iic\resources\views/admin/users/index.blade.php ENDPATH**/ ?>

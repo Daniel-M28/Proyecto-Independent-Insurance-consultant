@@ -51,6 +51,27 @@
                      Users
                 </a>
                 @endcan
+
+                <a href="{{ route('admin.regulatorios') }}"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    Regulatorios
+                </a>
+
+                <a href="{{ route('admin.factoring') }}"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    Factoring
+                </a>
+
+                <a href="{{ route('admin.commercial.index') }}"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    commercial Quotes
+                </a>
+
+                  <a href="{{ route('admin.personal-quotes.index') }}"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    personal Quotes
+                </a>
+
             </div>
         </div>
     </div>

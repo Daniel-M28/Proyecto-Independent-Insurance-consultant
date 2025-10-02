@@ -17,7 +17,7 @@
                 alertBox.style.opacity = "0";
                 setTimeout(() => alertBox.remove(), 400); // elimina después del fade
             }
-        }, 3000); // ⏳ 5 segundos
+        }, 3000); 
     </script>
 <?php endif; ?>
 
@@ -51,6 +51,27 @@
                      Users
                 </a>
                 <?php endif; ?>
+
+                <a href="<?php echo e(route('admin.regulatorios')); ?>"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    Regulatorios
+                </a>
+
+                <a href="<?php echo e(route('admin.factoring')); ?>"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    Factoring
+                </a>
+
+                <a href="<?php echo e(route('admin.commercial.index')); ?>"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    commercial Quotes
+                </a>
+
+                  <a href="<?php echo e(route('admin.personal-quotes.index')); ?>"
+                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
+                    personal Quotes
+                </a>
+
             </div>
         </div>
     </div>

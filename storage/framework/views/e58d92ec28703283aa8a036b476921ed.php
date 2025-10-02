@@ -82,6 +82,10 @@ unset($__errorArgs, $__bag); ?>
         </form>
     </div>
 </div>
+<!-- Botón back -->
+    <div class="mt-6">
+        <a href="<?php echo e(route('dashboard')); ?>" class="text-gray-400 hover:underline">← Back to list</a>
+    </div>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\proyecto_iic\resources\views/admin/users/edit.blade.php ENDPATH**/ ?>
