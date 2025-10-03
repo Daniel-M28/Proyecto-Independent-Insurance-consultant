@@ -34,45 +34,50 @@
                 What would you like to do today?
             </p>
 
-            <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="{{ route('certificados.index') }}"
-                   class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                    Generate COI
-                </a>
+           <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+    <a href="{{ route('certificados.index') }}"
+       class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        Generate COI
+    </a>
 
-                <a href="#"
-                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                    View My Policy
-                </a>
+    <a href="#"
+       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        View My Policy
+    </a>
 
-                 @can('admin.users.index')
-                 <a href="{{ route('admin.users.index') }}"
-                    class="px-8 py-4 bg-blue-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                     Users
-                </a>
-                @endcan
+    @can('admin.users.index')
+    <a href="{{ route('admin.users.index') }}"
+       class="w-full px-6 py-4 bg-blue-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        Users
+    </a>
+    @endcan
 
-                <a href="{{ route('admin.regulatorios') }}"
-                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                    Regulatorios
-                </a>
+    <a href="{{ route('admin.regulatorios') }}"
+       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        Regulatorios
+    </a>
 
-                <a href="{{ route('admin.factoring') }}"
-                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                    Factoring
-                </a>
+    <a href="{{ route('admin.factoring') }}"
+       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        Factoring
+    </a>
 
-                <a href="{{ route('admin.commercial.index') }}"
-                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                    commercial Quotes
-                </a>
+    <a href="{{ route('admin.commercial.index') }}"
+       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        Commercial Quotes
+    </a>
 
-                  <a href="{{ route('admin.personal-quotes.index') }}"
-                   class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors">
-                    personal Quotes
-                </a>
+    <a href="{{ route('admin.personal-quotes.index') }}"
+       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        Personal Quotes
+    </a>
 
-            </div>
+    <a href="{{ route('admin.new-company.index') }}"
+       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+        New Companies
+    </a>
+</div>
+
         </div>
     </div>
 </div>

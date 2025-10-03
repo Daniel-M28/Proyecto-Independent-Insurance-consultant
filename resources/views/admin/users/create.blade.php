@@ -1,0 +1,113 @@
+@extends('layouts.app')
+
+@section('content')
+<h1 class="mt-12 text-3xl font-semibold text-white">Crear usuario</h1>
+
+<div class="bg-zinc-800 rounded-lg shadow-md p-6">
+    <div class="bg-zinc-800 p-6 rounded-lg">
+
+        <!-- Formulario de creación -->
+        <form method="POST" action="{{ route('admin.users.store') }}">
+            @csrf
+
+            <!-- Nombre -->
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-white">Nombre</label>
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value="{{ old('name') }}"
+                    class="mt-1 block w-full bg-zinc-900 border border-zinc-700 text-white rounded-md shadow-sm focus:ring-indigo-500"
+                >
+                @error('name')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-4">
+                <label for="lastname" class="block text-sm font-medium text-white">Apellido</label>
+                <input
+                    id="lastname"
+                    name="lastname"
+                    type="text"
+                    value="{{ old('lastname') }}"
+                    class="mt-1 block w-full bg-zinc-900 border border-zinc-700 text-white rounded-md shadow-sm focus:ring-indigo-500"
+                >
+                @error('lastname')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-white">Correo electrónico</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value="{{ old('email') }}"
+                    class="mt-1 block w-full bg-zinc-900 border border-zinc-700 text-white rounded-md shadow-sm focus:ring-indigo-500"
+                >
+                @error('email')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-white">Contraseña</label>
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    class="mt-1 block w-full bg-zinc-900 border border-zinc-700 text-white rounded-md shadow-sm focus:ring-indigo-500"
+                >
+                @error('password')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Confirmar Password -->
+            <div class="mb-4">
+                <label for="password_confirmation" class="block text-sm font-medium text-white">Confirmar contraseña</label>
+                <input
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    type="password"
+                    class="mt-1 block w-full bg-zinc-900 border border-zinc-700 text-white rounded-md shadow-sm focus:ring-indigo-500"
+                >
+            </div>
+
+            <!-- Listado de roles -->
+            <h2 class="text-lg font-semibold text-white mt-6 mb-2">Asignar roles</h2>
+            <div class="grid gap-2">
+                @foreach ($roles as $role)
+                    <label class="inline-flex items-center text-white">
+                        <input
+                            type="checkbox"
+                            name="roles[]"
+                            value="{{ $role->id }}"
+                            class="mr-2 rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                            {{ in_array($role->id, old('roles', [])) ? 'checked' : '' }}
+                        >
+                        {{ $role->name }}
+                    </label>
+                @endforeach
+            </div>
+
+            <!-- Botón -->
+            <button type="submit"
+                class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Crear usuario
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Botón back -->
+<div class="mt-6">
+    <a href="{{ route('admin.users.index') }}" class="text-gray-400 hover:underline">← Back to list</a>
+</div>
+@endsection

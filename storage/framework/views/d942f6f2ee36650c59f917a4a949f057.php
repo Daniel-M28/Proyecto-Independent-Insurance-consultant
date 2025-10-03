@@ -6,27 +6,7 @@
 
 <?php $__env->startSection('content'); ?>
 
-     <div id='exito'><!-- Mensaje de éxito -->
-    <?php if(session('success')): ?>
-        <div class=" mt-12 mb-4 p-3 bg-green-600 text-white rounded">
-            <?php echo e(session('success')); ?>
-
-        </div>
-  </div>
-   
-
-    <script>
-        setTimeout(() => {
-            const alertBox = document.getElementById('exito');
-            if (alertBox) {
-                alertBox.style.transition = "opacity 0.5s ease";
-                alertBox.style.opacity = "0";
-                setTimeout(() => alertBox.remove(), 500); 
-            }
-        }, 3000); 
-    </script>
- <?php endif; ?>
-
+    
 <div class="bg-[#1e1e2f] text-gray-200 font-sans mt-16">
   <div class="flex flex-col lg:flex-row max-w-7xl mx-auto min-h-screen">
     
@@ -45,6 +25,31 @@
 
     <!-- Formulario -->
     <div class="w-full max-w-2xl bg-[#121212] p-8 lg:p-16 rounded-lg text-white">
+       <!-- Mensajes de éxito y error -->
+            <?php if(session('success')): ?>
+                <div class="mb-4 p-3 bg-green-600 text-white rounded">
+                    <?php echo e(session('success')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            <?php if(session('error')): ?>
+                <div class="mb-4 p-3 bg-red-600 text-white rounded">
+                    <?php echo e(session('error')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            <?php if($errors->any()): ?>
+                <div class="mb-4 p-3 bg-red-600 text-white rounded">
+                    <ul class="list-disc pl-5">
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            
       <form action="<?php echo e(route('factoring.store')); ?>" method="POST" class="space-y-6">
         <?php echo csrf_field(); ?>
         <!-- Nombre -->
@@ -132,15 +137,16 @@ unset($__errorArgs, $__bag); ?>
 
         <!-- Observaciones -->
         <div>
-          <label for="observations" class="block mb-1 font-semibold">Observations – Request for permit or procedure</label>
+          <label for="observations" class="block mb-1 font-semibold">Observations – Request for service</label>
           <textarea 
             id="observations" 
             name="observations" 
             rows="4"  
             maxlength="500" 
-            placeholder="Describe aquí tu solicitud..."
+            placeholder="Describe your application:"
             value="<?php echo e(old('observations')); ?>"
             class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400"
+            required
           ></textarea>
         </div>
 

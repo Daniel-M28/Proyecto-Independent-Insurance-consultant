@@ -2,14 +2,17 @@
 
 @section('content')
 
-@if(session('success'))
-    <div class="mt-12 mb-4 p-3 bg-green-600 text-white rounded">
-        {{ session('success') }}
-    </div>
-@endif
+
 
 <div class="mt-24 max-w-7xl mx-auto p-6 bg-zinc-900 text-gray-100 rounded-lg shadow">
-    <h1 class="text-3xl font-bold mb-6 text-center">Solicitudes de Regulatorios</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">Regulatory Requests</h1>
+
+
+    @if(session('error'))
+    <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
+        {{ session('error') }}
+    </div>
+@endif
 
     @if($regulatorios->count())
         <div class="overflow-x-auto rounded-lg shadow-inner">
@@ -68,6 +71,6 @@
 
 <!-- Botón back -->
 <div class="mt-6">
-    <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to list</a>
+    <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to Dashboard</a>
 </div>
 @endsection

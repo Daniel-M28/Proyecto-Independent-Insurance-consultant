@@ -32,7 +32,7 @@ class FactoringController extends Controller
 
         Factoring::create($validated);
 
-        return redirect()->back()->with('success', 'Request sent successfully ✅');
+        return redirect()->back()->with('success', 'Request sent successfully ');
     }
 
     
@@ -43,7 +43,7 @@ class FactoringController extends Controller
         $factoring->delete();
     
         return redirect()->route('factorings.index')
-                         ->with('success', 'La solicitud fue eliminada correctamente.');
+                         ->with('error', 'request successfully deleted');
     }
 
 

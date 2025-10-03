@@ -25,7 +25,7 @@ class CommercialAdminController extends Controller
     $request->delete();
 
     return redirect()->route('admin.commercial.index')
-                     ->with('success', 'Commercial request deleted successfully.');
+                     ->with('error', 'Commercial request deleted successfully.');
     }
 
 

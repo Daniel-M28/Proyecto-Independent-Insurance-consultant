@@ -49,7 +49,7 @@ class RegulatorioController extends Controller
 
     // Redirigir con mensaje de éxito
     return redirect()->route('regulatorios.index')
-                     ->with('success', 'Solicitud eliminada correctamente.');
+                     ->with('error', 'request successfully deleted');
 }
 
 }

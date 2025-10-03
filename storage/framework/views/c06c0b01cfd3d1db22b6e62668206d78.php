@@ -1,33 +1,5 @@
 <?php $__env->startSection('content'); ?>
 
-<div id="exito">
-    
-    <?php if(session('success')): ?>
-        <div class="mt-12 mb-4 p-3 bg-green-600 text-white rounded">
-            <?php echo e(session('success')); ?>
-
-        </div>
-
-        <script>
-            setTimeout(() => {
-                const alertBox = document.getElementById('exito');
-                if (alertBox) {
-                    alertBox.style.transition = "opacity 0.5s ease";
-                    alertBox.style.opacity = "0";
-                    setTimeout(() => alertBox.remove(), 500); 
-                }
-            }, 3000); 
-        </script>
-    <?php endif; ?>
-
-    
-    <?php if($errors->any()): ?>
-        <div class="mt-4 mb-4 p-3 bg-red-600 text-white rounded">
-            <strong>There was an error submitting the form. Please check the fields below.</strong>
-        </div>
-    <?php endif; ?>
-</div>
-
 
 <div class="bg-[#1e1e2f] text-gray-200 font-sans mt-16">
   <div class="flex flex-col lg:flex-row max-w-7xl mx-auto min-h-screen">
@@ -57,6 +29,31 @@
     <div class="w-full lg:w-1/2 bg-[#121212] p-8 lg:p-16">
       
       <!-- Formulario Comercial -->
+ <!-- Mensajes de éxito y error -->
+            <?php if(session('success')): ?>
+                <div class="mb-4 p-3 bg-green-600 text-white rounded">
+                    <?php echo e(session('success')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            <?php if(session('error')): ?>
+                <div class="mb-4 p-3 bg-red-600 text-white rounded">
+                    <?php echo e(session('error')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            <?php if($errors->any()): ?>
+                <div class="mb-4 p-3 bg-red-600 text-white rounded">
+                    <ul class="list-disc pl-5">
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
 <form 
     id="form-comercial" 
     action="<?php echo e(route('commercial.store')); ?>" 
@@ -623,7 +620,7 @@ unset($__errorArgs, $__bag); ?>
         multiple
     >
     <small class="text-gray-400">Allowed formats: JPG, PNG, PDF. Max 6 files, 5MB each.</small>
-    <?php $__errorArgs = ['licenses'];
+     <?php $__errorArgs = ['licenses'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -671,6 +668,7 @@ unset($__errorArgs, $__bag); ?>
     
 
 <script>
+    //intercambiar vista de formularios
   function mostrarFormulario(tipo) {
     const comercial = document.getElementById('form-comercial');
     const personal = document.getElementById('form-personal');
@@ -688,37 +686,6 @@ unset($__errorArgs, $__bag); ?>
   document.addEventListener('DOMContentLoaded', () => {
     mostrarFormulario('comercial');
   });
-</script>
-
-<script> //validación de archivos para ambos formularios que no supere 5MB y max 6 archivos
-function validateFiles(event) {
-    const input = event.target;
-    const files = input.files;
-
-    // Max 6 files
-    if (files.length > 6) {
-        alert("You can only upload a maximum of 6 files.");
-        input.value = "";
-        return;
-    }
-
-    for (let file of files) {
-        // Max 5 MB
-        if (file.size > 5 * 1024 * 1024) {
-            alert(`The file "${file.name}" exceeds the 5MB limit.`);
-            input.value = "";
-            return;
-        }
-
-        // Allowed formats
-        const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
-        if (!allowedTypes.includes(file.type)) {
-            alert(`The file "${file.name}" is not allowed. Only JPG, PNG, or PDF are accepted.`);
-            input.value = "";
-            return;
-        }
-    }
-}
 </script>
 
 

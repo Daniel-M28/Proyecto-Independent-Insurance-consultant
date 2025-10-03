@@ -5,6 +5,11 @@
 
     <h1 class="text-3xl font-bold mb-6 text-center text-white">Factoring Requests</h1>
 
+   @if(session('error'))
+    <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
+        {{ session('error') }}
+    </div>
+@endif
     <!-- Tabla -->
     <div class="overflow-x-auto rounded-lg shadow-inner">
         <table class="min-w-full border border-zinc-700 bg-zinc-800 text-center">
@@ -66,7 +71,7 @@
 
     <!-- Botón back -->
     <div class="mt-6">
-        <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to list</a>
+        <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to dashboard</a>
     </div>
 </div>
 @endsection

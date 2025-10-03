@@ -13,6 +13,8 @@ use App\Http\Controllers\CommercialRequestController;
 use App\Http\Controllers\Admin\CommercialAdminController;
 use App\Http\Controllers\Admin\PersonalQuoteController;
 
+use App\Http\Controllers\CompanyController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -120,4 +122,31 @@ Route::prefix('admin')->group(function () {
 
     Route::delete('/personal-quotes/{id}', [PersonalQuoteController::class, 'destroy'])
      ->name('admin.personal-quotes.destroy');
+});
+
+
+
+//Formulario nueva compañia     
+
+Route::prefix('admin')->group(function () {
+
+    // Listar todas las solicitudes de empresa
+    Route::get('/new-company', [CompanyController::class, 'index'])
+        ->name('admin.new-company.index');
+
+    // Mostrar formulario para crear nueva solicitud
+    Route::get('/new-company/create', [CompanyController::class, 'create'])
+        ->name('admin.new-company.create');
+
+    // Guardar nueva solicitud
+    Route::post('/new-company', [CompanyController::class, 'store'])
+        ->name('admin.new-company.store');
+
+    // Mostrar detalles de una solicitud
+    Route::get('/new-company/{id}', [CompanyController::class, 'show'])
+        ->name('admin.new-company.show');
+
+    // Eliminar una solicitud
+    Route::delete('/new-company/{id}', [CompanyController::class, 'destroy'])
+        ->name('admin.new-company.destroy');
 });

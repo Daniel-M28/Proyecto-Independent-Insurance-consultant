@@ -42,6 +42,6 @@ CommercialRequest::create($validated);
 
 
 
-        return redirect()->back()->with('success', 'Quote request submitted successfully ✅');
+        return redirect()->back()->with('success', 'Quote request submitted successfully ');
     }
 }

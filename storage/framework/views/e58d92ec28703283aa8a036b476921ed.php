@@ -84,7 +84,7 @@ unset($__errorArgs, $__bag); ?>
 </div>
 <!-- Botón back -->
     <div class="mt-6">
-        <a href="<?php echo e(route('dashboard')); ?>" class="text-gray-400 hover:underline">← Back to list</a>
+        <a href="<?php echo e(route('admin.users.index')); ?>" class="text-gray-400 hover:underline">← Back to list</a>
     </div>
 <?php $__env->stopSection(); ?>
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -33,18 +34,47 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+   public function create()
+{
+    $roles = Role::all(); // todos los roles disponibles
+    return view('admin.users.create', compact('roles'));
+}
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+     public function store(Request $request)
     {
-        //
+        // Validación
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'lastname' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'roles' => ['nullable', 'array'],
+            'roles.*' => ['exists:roles,id'],
+        ]);
+
+        // Crear usuario (hasheamos la contraseña explícitamente)
+        $user = User::create([
+            'name' => $data['name'],
+            'lastname' => $data['lastname'] ?? null,
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        // Asignar roles si el admin seleccionó alguno
+        if (!empty($data['roles'])) {
+            // Si los checkbox envían ids de role, sincronizamos
+            $user->roles()->sync($data['roles']);
+        }
+        // si no seleccionó roles, tu booted() asignará 'usuario' automáticamente
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Usuario creado correctamente.');
     }
+
 
     /**
      * Display the specified resource.
@@ -100,7 +130,7 @@ class UserController extends Controller
     $user->delete();
 
     return redirect()->route('admin.users.index')
-        ->with('success', 'Usuario eliminado correctamente.');
+        ->with('error', 'Usuario eliminado correctamente.');
 }
 
 }
