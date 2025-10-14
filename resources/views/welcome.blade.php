@@ -191,7 +191,7 @@
   <div id="contact" class="w-full bg-zinc-800 text-white border-t border-gray-700">
     <div class="flex flex-col md:flex-row">
       
-      <!-- Mapa -->
+      <!-- Map -->
   <div id="map" ></div>
 
   <!-- Leaflet JS -->
@@ -199,7 +199,7 @@
   
 
 
-      <!-- Información de contacto -->
+      <!-- contact information -->
       <div class="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center">
         <h3 class="text-2xl font-semibold mb-4">FIND US</h3>
         <p class="text-gray-300 mb-6">

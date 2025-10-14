@@ -11,7 +11,7 @@
 <div class="bg-[#1e1e2f] text-gray-200 font-sans mt-16">
   <div class="flex flex-col lg:flex-row max-w-7xl mx-auto min-h-screen">
     
-    <!-- Sección de información -->
+    <!-- information section -->
     <div class="w-full lg:w-1/2 p-8 lg:p-16 bg-zinc-800">
       <h1 class="text-4xl font-bold mb-6">Regulatory</h1>
       <p class="text-lg leading-relaxed">
@@ -21,7 +21,7 @@
          with the requested information. We will contact you as soon as possible.
     </div>
 
-    <!-- Formulario -->
+    <!-- Form -->
     <div class="w-full max-w-2xl bg-[#121212] p-8 lg:p-16 rounded-lg text-white">
 
      <!-- Mensajes de éxito y error -->

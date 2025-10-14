@@ -15,13 +15,15 @@ use App\Http\Controllers\Admin\PersonalQuoteController;
 
 use App\Http\Controllers\CompanyController;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 //Acceder a vista de administrador
-Route::middleware(['auth', 'verified', 'can:admin.users.index'])
+Route::middleware(['auth', 'can:admin.users.index'])
     ->resource('users', UserController::class)
     ->names('admin.users');
 
@@ -37,7 +39,7 @@ Route::post('/certificados/send-pdf', [CertificadoController::class, 'sendPdf'])
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('/get_quote', function () {
     return view('quote');
@@ -150,3 +152,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('/new-company/{id}', [CompanyController::class, 'destroy'])
         ->name('admin.new-company.destroy');
 });
+
+// Ruta para verificar usuario temporal
+Route::get('/verify-temp-user', [RegisteredUserController::class, 'verifyTempUser'])
+    ->name('verify.temp.user');

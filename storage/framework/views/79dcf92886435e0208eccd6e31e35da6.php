@@ -54,7 +54,7 @@
 
     <a href="<?php echo e(route('admin.regulatorios')); ?>"
        class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
-        Regulatorios
+       Regulatory
     </a>
 
     <a href="<?php echo e(route('admin.factoring')); ?>"

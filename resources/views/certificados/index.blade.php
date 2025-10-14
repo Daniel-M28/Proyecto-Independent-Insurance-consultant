@@ -46,25 +46,35 @@
             <canvas id="pdf-canvas" style="border:1px solid #555; width:100%; max-width:800px;"></canvas>
         </div>
 
+        
         {{-- Inputs para editar datos --}}
-        <div class="bg-[#2c2f33] p-6 rounded-md shadow">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label for="fecha" class="block text-white mb-2">Fecha:</label>
-                    <input type="date" id="fecha" class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded leading-tight">
-                </div>
-                <div>
-                    <label for="empresa" class="block text-white mb-2">Certificate Holder:</label>
-                    <textarea 
-                      id="empresa"
-                      rows="3"
-                      maxlength="120"
-                      style="line-height: -1.1;"
-                      class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded resize-none"
-                      placeholder="Nombre de empresa, dirección, ciudad, etc."></textarea>
-                    <p id="contador" class="text-sm text-gray-400 mt-1 text-right">0 / 120 caracteres</p>
-                  </div> 
-                  <!--Scripts para el textarea Placeholder-->
+<div class="bg-[#2c2f33] p-6 rounded-md shadow">
+    <form id="formPdf" onsubmit="return false;">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="fecha" class="block text-white mb-2">Fecha:</label>
+                <input 
+                    type="date" 
+                    id="fecha" 
+                    name="fecha"
+                    class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded leading-tight" 
+                    required>
+            </div>
+
+            <div>
+                <label for="empresa" class="block text-white mb-2">Certificate Holder:</label>
+                <textarea 
+                    id="empresa"
+                    name="empresa"
+                    rows="3"
+                    maxlength="120"
+                    style="line-height: -1.1;"
+                    class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded resize-none"
+                    placeholder="Nombre de empresa, dirección, ciudad, etc."
+                    required></textarea>
+                <p id="contador" class="text-sm text-gray-400 mt-1 text-right">0 / 120 caracteres</p>
+            </div> 
+            <!--Scripts para el textarea Placeholder-->
                   <script>
                     const textarea = document.getElementById('empresa');
                     const contador = document.getElementById('contador');
@@ -89,26 +99,44 @@
                       contador.textContent = `${finalText.length} / 120 caracteres`;
                     });
                   </script>
-                </div>
-<div class="col-span-1 md:col-span-2">
-    <label for="correo1" class="block text-white mb-2">Correo destinatario (obligatorio):</label>
-    <input type="email" id="correo1" name="correo1"class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded" placeholder="ejemplo@correo.com" required>
 
-    <label for="correo2" class="block text-white mb-2">Segundo correo (opcional):</label>
-    <input type="email" id="correo2" name="correo2" class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded" placeholder="opcional@correo.com">
+        </div>
 
-    <button id="enviarCorreo" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">
-        Enviar PDF por correo
-    </button>
-</div>
+        <div class="col-span-1 md:col-span-2">
+            <label for="correo1" class="block text-white mb-2">Correo destinatario (obligatorio):</label>
+            <input 
+                type="email" 
+                id="correo1" 
+                name="correo1"
+                class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded"
+                placeholder="ejemplo@correo.com" 
+                required>
 
+            <label for="correo2" class="block text-white mb-2">Segundo correo (opcional):</label>
+            <input 
+                type="email" 
+                id="correo2" 
+                name="correo2"
+                class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded"
+                placeholder="opcional@correo.com">
 
-            <button id="editarPdf" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                Descargar PDF Editado
+            <button 
+                id="enviarCorreo"
+                type="button"
+                class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">
+                Enviar PDF por correo
             </button>
         </div>
-    </div>
+
+        <button 
+            id="editarPdf"
+            type="button"
+            class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+            Descargar PDF Editado
+        </button>
+    </form>
 </div>
+
 
 
 <!-- Botón back -->
@@ -152,6 +180,7 @@
     @endif
 
     document.getElementById('editarPdf').addEventListener('click', async () => {
+        
         if (!currentPdfUrl) return alert('Primero selecciona un PDF.');
 
         const existingPdfBytes = await fetch(currentPdfUrl).then(res => res.arrayBuffer());
@@ -227,6 +256,12 @@ firstPage.drawText(fecha, {
 <script>
     // Función específica para enviar el PDF editado por correo
     document.getElementById('enviarCorreo').addEventListener('click', async () => {
+    const form = document.getElementById('formPdf');
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
         const correo1 = document.getElementById('correo1').value.trim();
         const correo2 = document.getElementById('correo2').value.trim();
 
