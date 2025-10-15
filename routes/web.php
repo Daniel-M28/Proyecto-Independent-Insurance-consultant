@@ -17,6 +17,8 @@ use App\Http\Controllers\CompanyController;
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 
+use App\Http\Controllers\PolicyController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -156,3 +158,11 @@ Route::prefix('admin')->group(function () {
 // Ruta para verificar usuario temporal
 Route::get('/verify-temp-user', [RegisteredUserController::class, 'verifyTempUser'])
     ->name('verify.temp.user');
+
+
+//Rutas para polizas
+  Route::middleware(['auth'])->group(function(){
+    Route::get('/policies',[PolicyController::class,'index'])->name('policies.index');
+    Route::post('/policies',[PolicyController::class,'store'])->name('policies.store');
+    Route::delete('/policies/{policy}',[PolicyController::class,'destroy'])->name('policies.destroy');
+});

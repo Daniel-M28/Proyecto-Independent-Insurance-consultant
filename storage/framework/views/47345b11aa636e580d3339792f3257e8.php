@@ -8,17 +8,17 @@
         <form action="<?php echo e(route('certificados.store')); ?>" method="POST" enctype="multipart/form-data" class="bg-[#2c2f33] p-6 rounded-md shadow mb-6">
             <?php echo csrf_field(); ?>
             <div class="mb-4">
-                <label for="certificado" class="block text-white mb-2">Subir nuevo certificado (PDF):</label>
+                <label for="certificado" class="block text-white mb-2">Upload new certificate(PDF):</label>
                 <input type="file" name="certificado" id="certificado" class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded" accept="application/pdf" required>
             </div>
             <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded">
-                Subir PDF
+                Upload PDF
             </button>
         </form>
         <?php endif; ?>
 
         
-        <h4 class="text-white text-lg font-semibold mb-4">Archivos disponibles:</h4>
+        <h4 class="text-white text-lg font-semibold mb-4">Available files:</h4>
         <ul id="pdfList" class="space-y-2 mb-6">
             <?php $__currentLoopData = $pdfUrls; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pdf): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <li class="flex justify-between items-center bg-zinc-800 text-white p-3 rounded border border-gray-700">
@@ -32,7 +32,7 @@
                         <?php echo method_field('DELETE'); ?>
                         <input type="hidden" name="filename" value="<?php echo e($pdf['name']); ?>">
                         <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm">
-                            Eliminar
+                            Eliminate
                         </button>
                     </form>
                     <?php endif; ?>
@@ -50,15 +50,32 @@
 <div class="bg-[#2c2f33] p-6 rounded-md shadow">
     <form id="formPdf" onsubmit="return false;">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-                <label for="fecha" class="block text-white mb-2">Fecha:</label>
-                <input 
-                    type="date" 
-                    id="fecha" 
-                    name="fecha"
-                    class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded leading-tight" 
-                    required>
-            </div>
+            <!-- Campo de fecha -->
+<div>
+  <label for="fecha" class="block text-white mb-2">Date:</label>
+  <input 
+    type="text" 
+    id="fecha" 
+    name="fecha"
+    placeholder="MM/DD/YYYY"
+    class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded leading-tight focus:outline-none focus:border-gray-400"
+    required>
+</div>
+
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- Inicialización -->
+<script>
+  flatpickr("#fecha", {
+    dateFormat: "m/d/Y", // Formato USA
+    altInput: true,
+    altFormat: "m/d/Y",
+    allowInput: true
+  });
+</script>
+
 
             <div>
                 <label for="empresa" class="block text-white mb-2">Certificate Holder:</label>
@@ -69,9 +86,9 @@
                     maxlength="120"
                     style="line-height: -1.1;"
                     class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded resize-none"
-                    placeholder="Nombre de empresa, dirección, ciudad, etc."
+                    placeholder="Company name&#10;Address, City&#10;State, Zip code"
                     required></textarea>
-                <p id="contador" class="text-sm text-gray-400 mt-1 text-right">0 / 120 caracteres</p>
+                <p id="contador" class="text-sm text-gray-400 mt-1 text-right">0 / 120 characters</p>
             </div> 
             <!--Scripts para el textarea Placeholder-->
                   <script>
@@ -102,28 +119,28 @@
         </div>
 
         <div class="col-span-1 md:col-span-2">
-            <label for="correo1" class="block text-white mb-2">Correo destinatario (obligatorio):</label>
+            <label for="correo1" class="block text-white mb-2">Recipient email (required):</label>
             <input 
                 type="email" 
                 id="correo1" 
                 name="correo1"
                 class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded"
-                placeholder="ejemplo@correo.com" 
+                placeholder="required@email.com" 
                 required>
 
-            <label for="correo2" class="block text-white mb-2">Segundo correo (opcional):</label>
+            <label for="correo2" class="block text-white mb-2">Second email (optional):</label>
             <input 
                 type="email" 
                 id="correo2" 
                 name="correo2"
                 class="w-full px-4 py-2 mb-4 bg-zinc-800 text-white border border-gray-600 rounded"
-                placeholder="opcional@correo.com">
+                placeholder="optional@email.com">
 
             <button 
                 id="enviarCorreo"
                 type="button"
                 class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">
-                Enviar PDF por correo
+                Send PDF by email
             </button>
         </div>
 
@@ -131,7 +148,7 @@
             id="editarPdf"
             type="button"
             class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-            Descargar PDF Editado
+            Download Edited PDF
         </button>
     </form>
 </div>

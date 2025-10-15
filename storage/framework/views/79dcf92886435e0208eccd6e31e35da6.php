@@ -40,7 +40,7 @@
         Generate COI
     </a>
 
-    <a href="#"
+    <a href="<?php echo e(route('policies.index')); ?>"
        class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
         View My Policy
     </a>
