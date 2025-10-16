@@ -48,35 +48,41 @@
             <?php endif; ?>
         <?php endif; ?>
 
+       
+<div id="pdfContainer" class="mt-10">
+
+    <?php if($policy): ?>
+        <iframe src="<?php echo e(asset('storage/' . $policy->file_path)); ?>" class="w-full h-[700px] rounded-lg"></iframe>
+    <?php else: ?>
+        <p class="text-gray-400 text-center mt-10">There is no policy assigned yet.</p>
+    <?php endif; ?>
+
+    
+    <div class="flex justify-between items-center mt-6">
         
-        <div id="pdfContainer" class="mt-10">
-            <?php if($policy): ?>
-               <iframe src="<?php echo e(asset('storage/' . $policy->file_path)); ?>" class="w-full h-[700px] rounded-lg"></iframe>
+        <a href="<?php echo e(route('dashboard')); ?>" class="text-gray-400 hover:underline">← Back to dashboard</a>
 
-
-
-
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin')): ?>
-                    <form method="POST" action="<?php echo e(route('policies.destroy',$policy->id)); ?>" class="mt-4">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('DELETE'); ?>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
-                                onclick="return confirm('¿Deseas eliminar esta póliza?')">
-                            Eliminar Póliza
-                        </button>
-                    </form>
-                <?php endif; ?>
-            <?php else: ?>
-                <p class="text-gray-400 text-center mt-10">There is no policy assigned yet.</p>
+        
+        <?php if($policy): ?>
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin')): ?>
+                <form method="POST" action="<?php echo e(route('policies.destroy',$policy->id)); ?>">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                            onclick="return confirm('¿Deseas eliminar esta póliza?')">
+                        Eliminar Póliza
+                    </button>
+                </form>
             <?php endif; ?>
-        </div>
+        <?php endif; ?>
     </div>
+
 </div>
 
 <script>
 function confirmarReemplazo(){
     <?php if($policy): ?>
-        return confirm('Este usuario ya tiene una póliza. ¿Deseas reemplazarla?');
+        return confirm('This user already has a policy. Would you like to replace it?');
     <?php endif; ?>
     return true;
 }

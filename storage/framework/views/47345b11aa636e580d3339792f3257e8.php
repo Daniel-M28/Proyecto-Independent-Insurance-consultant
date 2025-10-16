@@ -1,44 +1,58 @@
 <?php $__env->startSection('content'); ?>
-<div class="flex justify-center mt-10">
+<div class="mt-24 flex justify-center mt-10">
     <div class="w-full max-w-5xl bg-[#1e1e1e] p-6 rounded-xl shadow-lg">
-        <h1 class="text-2xl font-semibold text-white mb-6 text-center">Gestión de Certificados de aseguranza</h1>
+        <h1 class="text-2xl font-semibold text-white mb-6 text-center">Management of Insurance Certificates</h1>
 
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('certificados.index')): ?>
-        
-        <form action="<?php echo e(route('certificados.store')); ?>" method="POST" enctype="multipart/form-data" class="bg-[#2c2f33] p-6 rounded-md shadow mb-6">
-            <?php echo csrf_field(); ?>
-            <div class="mb-4">
-                <label for="certificado" class="block text-white mb-2">Upload new certificate(PDF):</label>
-                <input type="file" name="certificado" id="certificado" class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded" accept="application/pdf" required>
-            </div>
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded">
-                Upload PDF
-            </button>
-        </form>
+         <?php if(session('success')): ?>
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center"><?php echo e(session('success')); ?></div>
         <?php endif; ?>
+            <?php if(session('error')): ?>
+                <div class="bg-red-600 text-white p-3 rounded mb-4 text-center"><?php echo e(session('error')); ?></div>    
+            <?php endif; ?>   
 
-        
-        <h4 class="text-white text-lg font-semibold mb-4">Available files:</h4>
-        <ul id="pdfList" class="space-y-2 mb-6">
-            <?php $__currentLoopData = $pdfUrls; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pdf): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <li class="flex justify-between items-center bg-zinc-800 text-white p-3 rounded border border-gray-700">
-                    <span class="cursor-pointer hover:underline" onclick="loadPdf('<?php echo e($pdf['url']); ?>')">
-                         <?php echo e($pdf['name']); ?>
 
-                    </span>
-                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('certificados.index')): ?>
-                    <form action="<?php echo e(route('certificados.destroy')); ?>" method="POST" onsubmit="return confirm('¿Eliminar este PDF?')">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('DELETE'); ?>
-                        <input type="hidden" name="filename" value="<?php echo e($pdf['name']); ?>">
-                        <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm">
-                            Eliminate
-                        </button>
-                    </form>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </ul>
+      
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin')): ?>
+    
+    <form method="GET" action="<?php echo e(route('certificados.index')); ?>" class="flex justify-center flex-1 mb-6">
+        <input type="text" name="search" value="<?php echo e(request('search')); ?>" placeholder="Search user by name or email"
+            class="w-1/2 px-4 py-2 bg-zinc-700 border border-zinc-700 text-white rounded-l-md focus:outline-none placeholder-gray-400" />
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">Search</button>
+    </form>
+
+    <?php if(!empty($results)): ?>
+        <div class="bg-zinc-900 p-4 rounded-lg mb-6">
+            <h2 class="text-white text-lg mb-3">Results:</h2>
+            <ul class="space-y-2">
+                <?php $__currentLoopData = $results; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li class="flex justify-between items-center bg-zinc-800 p-3 rounded-lg">
+                        <div>
+                            <p class="text-white font-semibold"><?php echo e($r->name); ?></p>
+                            <p class="text-gray-400 text-sm"><?php echo e($r->email); ?></p>
+                        </div>
+                        <a href="<?php echo e(route('certificados.index', ['user_id' => $r->id])); ?>"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">See Certificate</a>
+                    </li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    
+    <?php if($user): ?>
+        <form method="POST" action="<?php echo e(route('certificados.store')); ?>" enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
+            <label class="text-white block mb-2">Upload certificate for <?php echo e($user->name); ?></label>
+            <input type="file" name="file" accept="application/pdf" required
+                class="block w-full text-white bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+            <button type="submit"
+                class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">Upload Certificate</button>
+        </form>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if($certificado && Storage::disk('public')->exists($certificado->file_path)): ?>
 
         
         <div class="bg-zinc-800 p-4 rounded shadow mb-6 text-center">
@@ -154,11 +168,52 @@
 </div>
 
 
+<div id="certificadoContainer" class="mt-10">
 
-<!-- Botón back -->
-    <div class="mt-6">
+    <?php if($certificado && Storage::disk('public')->exists($certificado->file_path)): ?>
+        
+        <canvas id="pdf-canvas" class="w-full h-[700px] rounded-lg border border-gray-600 mb-6"></canvas>
+
+       
+    <?php else: ?>
+        <p class="text-gray-400 text-center mt-10">There is no certificate assigned yet.</p>
+    <?php endif; ?>
+
+    
+    <div class="flex justify-between items-center mt-6">
+        
         <a href="<?php echo e(route('dashboard')); ?>" class="text-gray-400 hover:underline">← Back to dashboard</a>
+
+        
+        <?php if($certificado): ?>
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('certificados.index')): ?>
+                <form method="POST" action="<?php echo e(route('certificados.destroy', $certificado->id)); ?>"
+                      onsubmit="return confirm('¿Estás seguro de eliminar este certificado?')">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                        Eliminar Certificado
+                    </button>
+                </form>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
+
+</div>
+
+
+
+<?php else: ?>
+    
+    <p class="text-gray-400 text-center mt-10">There is no policy assigned yet.</p>
+<?php endif; ?>
+
+
+
+
+
+
+   
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
@@ -189,12 +244,17 @@
         });
     }
 
-    <?php if(count($pdfUrls) > 0): ?>
-        window.onload = function () {
-            loadPdf("<?php echo e($pdfUrls[0]['url']); ?>");
-        };
-    <?php endif; ?>
+  <?php if($certificado && Storage::disk('public')->exists($certificado->file_path)): ?>
+       window.onload = function () {
+           const pdfUrl = "<?php echo e(asset('storage/' . $certificado->file_path)); ?>";
+           console.log("Cargando PDF:", pdfUrl);
+           loadPdf(pdfUrl);
+       };
+   <?php endif; ?>
 
+</script>
+
+<script>
     document.getElementById('editarPdf').addEventListener('click', async () => {
         
         if (!currentPdfUrl) return alert('Primero selecciona un PDF.');

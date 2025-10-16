@@ -1,45 +1,60 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex justify-center mt-10">
+<div class="mt-24 flex justify-center mt-10">
     <div class="w-full max-w-5xl bg-[#1e1e1e] p-6 rounded-xl shadow-lg">
-        <h1 class="text-2xl font-semibold text-white mb-6 text-center">Gestión de Certificados de aseguranza</h1>
+        <h1 class="text-2xl font-semibold text-white mb-6 text-center">Management of Insurance Certificates</h1>
 
-        @can('certificados.index')
-        {{-- Formulario para subir PDF --}}
-        <form action="{{ route('certificados.store') }}" method="POST" enctype="multipart/form-data" class="bg-[#2c2f33] p-6 rounded-md shadow mb-6">
+         @if(session('success'))
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center">{{ session('success') }}</div>
+        @endif
+            @if(session('error'))
+                <div class="bg-red-600 text-white p-3 rounded mb-4 text-center">{{ session('error') }}</div>    
+            @endif   
+
+
+      {{-- Admin --}}
+@can('admin')
+    {{-- Buscador --}}
+    <form method="GET" action="{{ route('certificados.index') }}" class="flex justify-center flex-1 mb-6">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search user by name or email"
+            class="w-1/2 px-4 py-2 bg-zinc-700 border border-zinc-700 text-white rounded-l-md focus:outline-none placeholder-gray-400" />
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">Search</button>
+    </form>
+
+    @if(!empty($results))
+        <div class="bg-zinc-900 p-4 rounded-lg mb-6">
+            <h2 class="text-white text-lg mb-3">Results:</h2>
+            <ul class="space-y-2">
+                @foreach($results as $r)
+                    <li class="flex justify-between items-center bg-zinc-800 p-3 rounded-lg">
+                        <div>
+                            <p class="text-white font-semibold">{{ $r->name }}</p>
+                            <p class="text-gray-400 text-sm">{{ $r->email }}</p>
+                        </div>
+                        <a href="{{ route('certificados.index', ['user_id' => $r->id]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">See Certificate</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Subir PDF --}}
+    @if($user)
+        <form method="POST" action="{{ route('certificados.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="mb-4">
-                <label for="certificado" class="block text-white mb-2">Upload new certificate(PDF):</label>
-                <input type="file" name="certificado" id="certificado" class="w-full px-4 py-2 bg-zinc-800 text-white border border-gray-600 rounded" accept="application/pdf" required>
-            </div>
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded">
-                Upload PDF
-            </button>
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <label class="text-white block mb-2">Upload certificate for {{ $user->name }}</label>
+            <input type="file" name="file" accept="application/pdf" required
+                class="block w-full text-white bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+            <button type="submit"
+                class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">Upload Certificate</button>
         </form>
-        @endcan
+    @endif
+@endcan
 
-        {{-- Lista de archivos --}}
-        <h4 class="text-white text-lg font-semibold mb-4">Available files:</h4>
-        <ul id="pdfList" class="space-y-2 mb-6">
-            @foreach ($pdfUrls as $pdf)
-                <li class="flex justify-between items-center bg-zinc-800 text-white p-3 rounded border border-gray-700">
-                    <span class="cursor-pointer hover:underline" onclick="loadPdf('{{ $pdf['url'] }}')">
-                         {{ $pdf['name'] }}
-                    </span>
-                     @can('certificados.index')
-                    <form action="{{ route('certificados.destroy') }}" method="POST" onsubmit="return confirm('¿Eliminar este PDF?')">
-                        @csrf
-                        @method('DELETE')
-                        <input type="hidden" name="filename" value="{{ $pdf['name'] }}">
-                        <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm">
-                            Eliminate
-                        </button>
-                    </form>
-                    @endcan
-                </li>
-            @endforeach
-        </ul>
+@if ($certificado && Storage::disk('public')->exists($certificado->file_path))
 
         {{-- Canvas de visualización --}}
         <div class="bg-zinc-800 p-4 rounded shadow mb-6 text-center">
@@ -154,12 +169,53 @@
     </form>
 </div>
 
+{{-- Contenedor principal del certificado --}}
+<div id="certificadoContainer" class="mt-10">
 
+    @if($certificado && Storage::disk('public')->exists($certificado->file_path))
+        {{-- Canvas de visualización --}}
+        <canvas id="pdf-canvas" class="w-full h-[700px] rounded-lg border border-gray-600 mb-6"></canvas>
 
-<!-- Botón back -->
-    <div class="mt-6">
+       
+    @else
+        <p class="text-gray-400 text-center mt-10">There is no certificate assigned yet.</p>
+    @endif
+
+    {{-- Contenedor flex para botones --}}
+    <div class="flex justify-between items-center mt-6">
+        {{-- Botón Back to Dashboard siempre visible --}}
         <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to dashboard</a>
+
+        {{-- Botón Eliminar solo si hay certificado y usuario es admin --}}
+        @if($certificado)
+            @can('certificados.index')
+                <form method="POST" action="{{ route('certificados.destroy', $certificado->id) }}"
+                      onsubmit="return confirm('¿Estás seguro de eliminar este certificado?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                        Eliminar Certificado
+                    </button>
+                </form>
+            @endcan
+        @endif
     </div>
+
+</div>
+
+
+
+@else
+    {{-- Si NO hay certificado --}}
+    <p class="text-gray-400 text-center mt-10">There is no policy assigned yet.</p>
+@endif
+
+
+
+
+
+
+   
 
 {{-- Scripts --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
@@ -190,12 +246,17 @@
         });
     }
 
-    @if (count($pdfUrls) > 0)
-        window.onload = function () {
-            loadPdf("{{ $pdfUrls[0]['url'] }}");
-        };
-    @endif
+  @if ($certificado && Storage::disk('public')->exists($certificado->file_path))
+       window.onload = function () {
+           const pdfUrl = "{{ asset('storage/' . $certificado->file_path) }}";
+           console.log("Cargando PDF:", pdfUrl);
+           loadPdf(pdfUrl);
+       };
+   @endif
 
+</script>
+
+<script>
     document.getElementById('editarPdf').addEventListener('click', async () => {
         
         if (!currentPdfUrl) return alert('Primero selecciona un PDF.');

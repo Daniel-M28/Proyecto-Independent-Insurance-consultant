@@ -34,48 +34,66 @@
                 What would you like to do today?
             </p>
 
-           <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+           <div 
+  class="@can('admin.users.index') 
+            mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto 
+         @else 
+            mt-8 flex justify-center gap-6 flex-wrap 
+         @endcan">
+
+    {{-- Botones visibles para todos --}}
     <a href="{{ route('certificados.index') }}"
-       class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         Generate COI
     </a>
 
     <a href="{{ route('policies.index') }}"
-       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         View My Policy
     </a>
 
+    {{-- Solo visible para admin --}}
     @can('admin.users.index')
     <a href="{{ route('admin.users.index') }}"
-       class="w-full px-6 py-4 bg-blue-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         Users
     </a>
     @endcan
 
+    @can('admin')
     <a href="{{ route('admin.regulatorios') }}"
-       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
        Regulatory
     </a>
 
     <a href="{{ route('admin.factoring') }}"
-       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         Factoring
     </a>
 
     <a href="{{ route('admin.commercial.index') }}"
-       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         Commercial Quotes
     </a>
 
     <a href="{{ route('admin.personal-quotes.index') }}"
-       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         Personal Quotes
     </a>
 
     <a href="{{ route('admin.new-company.index') }}"
-       class="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold text-center rounded-lg shadow-lg transition-colors">
+       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         New Companies
     </a>
+    @endcan
 </div>
 
         </div>

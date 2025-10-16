@@ -48,35 +48,41 @@
             @endif
         @endcan
 
-        {{-- Contenedor PDF --}}
-        <div id="pdfContainer" class="mt-10">
-            @if($policy)
-               <iframe src="{{ asset('storage/' . $policy->file_path) }}" class="w-full h-[700px] rounded-lg"></iframe>
+       {{-- Contenedor PDF --}}
+<div id="pdfContainer" class="mt-10">
 
+    @if($policy)
+        <iframe src="{{ asset('storage/' . $policy->file_path) }}" class="w-full h-[700px] rounded-lg"></iframe>
+    @else
+        <p class="text-gray-400 text-center mt-10">There is no policy assigned yet.</p>
+    @endif
 
+    {{-- Contenedor flex para botones --}}
+    <div class="flex justify-between items-center mt-6">
+        {{-- Botón Back to Dashboard siempre visible --}}
+        <a href="{{ route('dashboard') }}" class="text-gray-400 hover:underline">← Back to dashboard</a>
 
-
-                @can('admin')
-                    <form method="POST" action="{{ route('policies.destroy',$policy->id) }}" class="mt-4">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
-                                onclick="return confirm('¿Deseas eliminar esta póliza?')">
-                            Eliminar Póliza
-                        </button>
-                    </form>
-                @endcan
-            @else
-                <p class="text-gray-400 text-center mt-10">There is no policy assigned yet.</p>
-            @endif
-        </div>
+        {{-- Botón Eliminar solo si hay PDF y usuario es admin --}}
+        @if($policy)
+            @can('admin')
+                <form method="POST" action="{{ route('policies.destroy',$policy->id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                            onclick="return confirm('¿Deseas eliminar esta póliza?')">
+                        Eliminar Póliza
+                    </button>
+                </form>
+            @endcan
+        @endif
     </div>
+
 </div>
 
 <script>
 function confirmarReemplazo(){
     @if($policy)
-        return confirm('Este usuario ya tiene una póliza. ¿Deseas reemplazarla?');
+        return confirm('This user already has a policy. Would you like to replace it?');
     @endif
     return true;
 }

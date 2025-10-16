@@ -1,51 +1,82 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Certificado;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CertificadoController extends Controller
 {
-    public function index()
+    use AuthorizesRequests;
+
+    public function index(Request $request)
     {
-        // Obtener todos los PDFs guardados en /public/certificados
-        $files = Storage::disk('public')->files('certificados');
+       $search = $request->input('search');
+$results = [];      // nunca null
+$user = null;
+$certificado = null;
+$pdfUrls = [];      // nunca null
 
-        // Filtrar solo los archivos PDF
-        $pdfs = array_filter($files, function ($file) {
-            return pathinfo($file, PATHINFO_EXTENSION) === 'pdf';
-        });
 
-        // Obtener las URLs para visualizar los archivos
-        $pdfUrls = array_map(function ($file) {
-            return [
-                'name' => basename($file),
-                'url' => asset('storage/' . $file),
-            ];
-        }, $pdfs);
+        // Buscar usuarios por nombre o email
+        if ($search) {
+            $results = User::where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->get();
+        }
 
-        return view('certificados.index', compact('pdfUrls'));
+        // Seleccionar usuario específico (admin) o el propio (usuario)
+        if ($request->has('user_id')) {
+            $user = User::find($request->user_id);
+            $certificado = Certificado::where('user_id', $user->id)->first();
+        } elseif (auth()->user()->hasRole('usuario')) {
+            $user = auth()->user();
+            $certificado = Certificado::where('user_id', $user->id)->first();
+        }
+
+        return view('certificados.index', compact('results', 'user', 'certificado', 'search'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'certificado' => 'required|mimes:pdf|max:20480',
+            'file' => 'required|mimes:pdf|max:20480',
+            'user_id' => 'required|exists:users,id'
         ]);
 
-        $file = $request->file('certificado');
+        $user = User::find($request->user_id);
 
-        // Usar el nombre original del archivo para guardarlo 
-        $fileName = $file->getClientOriginalName();
-        $file->storeAs('certificados', $fileName, );
-;
+        // Si ya existe un PDF para este usuario, eliminarlo
+        $existing = Certificado::where('user_id', $user->id)->first();
+        if ($existing) {
+            if (Storage::disk('public')->exists($existing->file_path)) {
+                Storage::disk('public')->delete($existing->file_path);
+            }
+            $existing->delete();
+        }
 
-        return redirect()->route('certificados.index')->with('success', 'PDF subido correctamente.');
+        $file = $request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        // Guardar en storage/app/public/certificados
+        $file->storeAs('certificados', $fileName, 'public');
+
+        // Crear registro en DB
+        Certificado::create([
+            'user_id' => $user->id,
+            'file_name' => $file->getClientOriginalName(),
+            'file_path' => 'certificados/' . $fileName,
+            'uploaded_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', 'Certificado subido correctamente.');
     }
 
-public function sendPdf(Request $request)
+   public function sendPdf(Request $request)
 {
     if ($request->hasFile('pdf')) {
         $pdfFile = $request->file('pdf');
@@ -71,19 +102,38 @@ public function sendPdf(Request $request)
 }
 
 
-    public function destroy(Request $request)
-    {
-        $request->validate([
-            'filename' => 'required|string',
-        ]);
 
-        $path = 'certificados/' . $request->input('filename');
 
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-            return redirect()->route('certificados.index')->with('success', 'PDF eliminado.');
+
+
+    public function destroy(Certificado $certificado)
+{
+    try {
+        // Solo si tiene ruta válida
+        if (!empty($certificado->file_path) && Storage::disk('public')->exists($certificado->file_path)) {
+            Storage::disk('public')->delete($certificado->file_path);
         }
 
-        return redirect()->route('certificados.index')->with('error', 'No se encontró el PDF.');
+        // Eliminar el registro de la BD
+        $certificado->delete();
+
+        // Si fue una petición AJAX, devolver JSON
+        if (request()->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Certificado eliminado correctamente.']);
+        }
+
+        return back()->with('success', 'Certificado eliminado correctamente.');
+
+    } catch (\Exception $e) {
+        \Log::error('Error al eliminar certificado: '.$e->getMessage());
+
+        if (request()->ajax()) {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el certificado.']);
+        }
+
+        return back()->with('error', 'Error al eliminar el certificado.');
     }
-} 
+}
+
+
+}

@@ -32,7 +32,10 @@ Route::middleware(['auth', 'can:admin.users.index'])
 //Certificados
 Route::get('/certificados', [CertificadoController::class, 'index'])->name('certificados.index');
 Route::post('/certificados', [CertificadoController::class, 'store'])->name('certificados.store');
-Route::delete('/certificados', [CertificadoController::class, 'destroy'])->name('certificados.destroy');
+Route::delete('/certificados/{certificado}', [CertificadoController::class, 'destroy'])
+    ->name('certificados.destroy')
+    ->middleware(['auth']);
+
 Route::post('/certificados/send-pdf', [CertificadoController::class, 'sendPdf'])->name('certificados.sendPdf');
 
 

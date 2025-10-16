@@ -75,7 +75,7 @@ class PolicyController extends Controller
             'uploaded_by' => auth()->id(),
         ]);
 
-        return back()->with('success','Póliza subida correctamente.');
+        return back()->with('success','Policy uploaded correctly.');
     }
 
     /**
@@ -93,6 +93,6 @@ class PolicyController extends Controller
         // Eliminar registro de la DB
         $policy->delete();
 
-        return back()->with('success', 'Póliza eliminada correctamente.');
+        return back()->with('success', 'Policy successfully deleted.');
     }
 }
