@@ -13,6 +13,36 @@
     
     <!-- information section -->
     <div class="w-full lg:w-1/2 p-8 lg:p-16 bg-zinc-800">
+
+    <!-- Mensajes de éxito y error responsive -->
+    <div class="block lg:hidden mb-6">
+    @if(session('success'))
+        <div class="mb-4 p-3 bg-green-600 text-white rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-4 p-3 bg-red-600 text-white rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="mb-4 p-3 bg-red-600 text-white rounded">
+            <ul class="list-disc pl-5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+</div>
+
+
+
+
+
       <h1 class="text-4xl font-bold mb-6">Regulatory</h1>
       <p class="text-lg leading-relaxed">
         
@@ -26,29 +56,40 @@
 
      <!-- Mensajes de éxito y error -->
             @if(session('success'))
-                <div class="mb-4 p-3 bg-green-600 text-white rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
+    <div class="hidden lg:block mb-4 p-3 bg-green-600 text-white rounded">
+        {{ session('success') }}
+    </div>
+@endif
 
-            @if(session('error'))
-                <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                    {{ session('error') }}
-                </div>
-            @endif
+@if(session('error'))
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        {{ session('error') }}
+    </div>
+@endif
 
-            @if($errors->any())
-                <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                    <ul class="list-disc pl-5">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+@if($errors->any())
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
             
-      <form action="{{ route('regulatorios.store') }}" method="POST" class="space-y-6">
+      <form action="{{ route('regulatorios.store') }}" method="POST" class="space-y-6 relative" id="RegulatoryForm">
         @csrf
+
+<!-- Contenedor del spinner y texto -->
+<div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
+    <div class="flex items-center gap-2">
+        <!-- Spinner -->
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <!-- Texto -->
+        <span class="text-white font-semibold text-lg">Submitting request...</span>
+    </div>
+</div>
+
         <!-- Nombre -->
         <div>
           <label for="name" class="block mb-1 font-semibold">Name</label>
@@ -132,26 +173,36 @@
             rows="4"  
             maxlength="500" 
             value="{{ old('observations') }}"
-            placeholder="Describe your application: MC Number: Rehabilitation or new application.
-            BOC-3, UCR, DOT Rehabilitation.
-            Business Registration (Incorporation).
-            MVR, Criminal Background Check, BOIR"
+            placeholder="Describe your application: MC Number: Rehabilitation or new application.BOC-3, UCR, DOT Rehabilitation. Business Registration (Incorporation)."
             class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400"
             required
           ></textarea>
         </div>
 
         <!-- Botón -->
-        <div>
-          <button 
-            type="submit"
-            class="w-full py-3 bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold rounded-md"
-          >
+    <div>
+        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md">
             Send Request
-          </button>
-        </div>
+        </button>
+    </div>
 
       </form>
+
+      <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('RegulatoryForm');
+    const loader = document.getElementById('loader');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', () => {
+        loader.classList.remove('hidden'); // muestra el spinner
+        submitButton.disabled = true;      // desactiva el botón
+        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    });
+});
+</script>
+
+
     </div>
   </div>
 </div>

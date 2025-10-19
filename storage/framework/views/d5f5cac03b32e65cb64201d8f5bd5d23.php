@@ -8,7 +8,7 @@
 
 
 
-<div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-zinc-900">
+<div class="min-h-screen flex flex-col sm:justify-center items-center pt-20 sm:pt-0 bg-zinc-900 ">
 <?php if(session('success')): ?>
                 <div class="mt-24 mb-4 p-3 bg-green-600 text-white rounded">
                     <?php echo e(session('success')); ?>

@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -51,22 +52,28 @@ class ProfileController extends Controller
 }
 
  public function destroy(Request $request)
-    {
-        $user = $request->user();
+{
+    $user = $request->user();
 
-        // cerrar sesión
-        Auth::logout();
-
-        // borrar usuario
-        $user->delete();
-
-        // invalidar sesión actual
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Redirigir a la página de inicio con mensaje flash
-    return redirect('/')->with('status', 'Tu usuario ha sido eliminado correctamente.'); // redirigir al inicio después de borrar
+    // Validar que el usuario haya ingresado su contraseña correctamente
+    if (! Hash::check($request->password, $user->password)) {
+        return back()
+            ->withErrors(['password' => 'La contraseña ingresada es incorrecta.'], 'userDeletion');
     }
+
+    // Cerrar sesión
+    Auth::logout();
+
+    // Borrar usuario
+    $user->delete();
+
+    // Invalidar sesión actual
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    // Redirigir con mensaje de confirmación
+    return redirect('/')->with('status', 'Your user has been successfully deleted.');
+}
 
 
 

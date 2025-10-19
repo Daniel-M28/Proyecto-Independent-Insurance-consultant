@@ -41,6 +41,11 @@ class RegulatorioController extends Controller
 
     public function destroy($id)
 {
+    // Verificar que el usuario tenga rol de administrador
+    if (!auth()->user()->hasRole('administrador')) {
+        abort(403, 'No tienes permiso para eliminar registros.');
+    }
+
     // Buscar la solicitud
     $regulatorio = Regulatorio::findOrFail($id);
 
@@ -48,8 +53,8 @@ class RegulatorioController extends Controller
     $regulatorio->delete();
 
     // Redirigir con mensaje de éxito
-    return redirect()->route('regulatorios.index')
-                     ->with('error', 'request successfully deleted');
+    return redirect()->route('admin.regulatorios')
+                 ->with('success', 'Request successfully deleted.');
 }
 
 }

@@ -5,6 +5,11 @@
 
     <h1 class="text-3xl font-bold mb-6 text-center">Company Requests</h1>
 
+ @if(session('success'))
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center">{{ session('success') }}</div>
+        @endif
+
+
     @if(session('error'))
     <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
         {{ session('error') }}
@@ -38,25 +43,28 @@
                             {{ \Carbon\Carbon::parse($company->created_at)->timezone('America/Bogota')->format('Y-m-d H:i') }}
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-2 justify-center">
-                                <!-- Botón View -->
-                                <a href="{{ route('admin.new-company.show', $company->id) }}" 
-                                   class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
-                                    View
-                                </a>
+    <div class="flex items-center gap-2 justify-center">
+        <!-- Botón View -->
+        <a href="{{ route('admin.new-company.show', $company->id) }}" 
+           class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
+            View
+        </a>
 
-                                <!-- Botón Delete -->
-                                <form action="{{ route('admin.new-company.destroy', $company->id) }}" method="POST" 
-                                      onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+        <!-- Botón Delete: solo visible para administrador -->
+        @if(auth()->user()->hasRole('administrador'))
+        <form action="{{ route('admin.new-company.destroy', $company->id) }}" method="POST" 
+              onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" 
+                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
+                Delete
+            </button>
+        </form>
+        @endif
+    </div>
+</td>
+
                     </tr>
                 @empty
                     <tr>

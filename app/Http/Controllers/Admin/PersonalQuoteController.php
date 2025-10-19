@@ -73,7 +73,7 @@ class PersonalQuoteController extends Controller
     $request->delete();
 
     return redirect()->route('admin.personal-quotes.index')
-                     ->with('error', 'request successfully deleted');
+                     ->with('success', 'request successfully deleted');
     }
 
 

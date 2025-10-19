@@ -5,6 +5,11 @@
 
     <h1 class="text-3xl font-bold mb-6 text-center">Company Requests</h1>
 
+ <?php if(session('success')): ?>
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center"><?php echo e(session('success')); ?></div>
+        <?php endif; ?>
+
+
     <?php if(session('error')): ?>
     <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
         <?php echo e(session('error')); ?>
@@ -41,25 +46,28 @@
 
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-2 justify-center">
-                                <!-- Botón View -->
-                                <a href="<?php echo e(route('admin.new-company.show', $company->id)); ?>" 
-                                   class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
-                                    View
-                                </a>
+    <div class="flex items-center gap-2 justify-center">
+        <!-- Botón View -->
+        <a href="<?php echo e(route('admin.new-company.show', $company->id)); ?>" 
+           class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
+            View
+        </a>
 
-                                <!-- Botón Delete -->
-                                <form action="<?php echo e(route('admin.new-company.destroy', $company->id)); ?>" method="POST" 
-                                      onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" 
-                                            class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+        <!-- Botón Delete: solo visible para administrador -->
+        <?php if(auth()->user()->hasRole('administrador')): ?>
+        <form action="<?php echo e(route('admin.new-company.destroy', $company->id)); ?>" method="POST" 
+              onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('DELETE'); ?>
+            <button type="submit" 
+                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
+                Delete
+            </button>
+        </form>
+        <?php endif; ?>
+    </div>
+</td>
+
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>

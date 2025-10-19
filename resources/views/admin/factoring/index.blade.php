@@ -5,6 +5,12 @@
 
     <h1 class="text-3xl font-bold mb-6 text-center text-white">Factoring Requests</h1>
 
+ @if(session('success'))
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center">{{ session('success') }}</div>
+        @endif
+
+
+
    @if(session('error'))
     <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
         {{ session('error') }}
@@ -41,17 +47,20 @@
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($request->created_at)->format('Y-m-d H:i') }}</td>
 
                         <td class="px-6 py-4 flex justify-center">
-                            {{-- Botón de eliminar --}}
-                            <form action="{{ route('factorings.destroy', $request->id) }}" method="POST" 
-                                  onsubmit="return confirm('¿Seguro que quieres eliminar esta solicitud?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
+    @can('admin')
+        {{-- Botón de eliminar --}}
+        <form action="{{ route('factorings.destroy', $request->id) }}" method="POST" 
+              onsubmit="return confirm('¿Seguro que quieres eliminar esta solicitud?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" 
+                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
+                Eliminar
+            </button>
+        </form>
+    @endcan
+</td>
+
                     </tr>
                 @empty
                     <tr>

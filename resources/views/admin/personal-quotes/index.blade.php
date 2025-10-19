@@ -4,6 +4,10 @@
 <div class="mt-24 max-w-7xl mx-auto p-6 bg-zinc-900 text-gray-100 rounded-lg shadow">
 
     <h1 class="text-3xl font-bold mb-6 text-center">Personal Requests</h1>
+@if(session('success'))
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center">{{ session('success') }}</div>
+        @endif
+
 
     @if(session('error'))
     <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
@@ -35,7 +39,7 @@
     {{ \Carbon\Carbon::parse($quote->created_at)->timezone('America/Bogota')->format('Y-m-d H:i') }}
 </td>
 
-                         <td class="px-6 py-4">
+                        <td class="px-6 py-4">
     <div class="flex items-center gap-2">
         <!-- Botón View -->
         <a href="{{ route('admin.personal-quotes.show', $quote->id) }}" 
@@ -43,7 +47,8 @@
             View
         </a>
 
-        <!-- Botón Delete -->
+        <!-- Botón Delete: solo visible para administrador -->
+        @if(auth()->user()->hasRole('administrador'))
         <form action="{{ route('admin.personal-quotes.destroy', $quote->id) }}" method="POST" 
               onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
             @csrf
@@ -53,8 +58,10 @@
                 Delete
             </button>
         </form>
+        @endif
     </div>
 </td>
+
 
                     </tr>
                 @empty

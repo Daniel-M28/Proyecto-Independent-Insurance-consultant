@@ -4,6 +4,10 @@
 <div class="mt-24 max-w-7xl mx-auto p-6 bg-zinc-900 text-gray-100 rounded-lg shadow">
 
     <h1 class="text-3xl font-bold mb-6 text-center">Personal Requests</h1>
+<?php if(session('success')): ?>
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center"><?php echo e(session('success')); ?></div>
+        <?php endif; ?>
+
 
     <?php if(session('error')): ?>
     <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
@@ -37,7 +41,7 @@
 
 </td>
 
-                         <td class="px-6 py-4">
+                        <td class="px-6 py-4">
     <div class="flex items-center gap-2">
         <!-- Botón View -->
         <a href="<?php echo e(route('admin.personal-quotes.show', $quote->id)); ?>" 
@@ -45,7 +49,8 @@
             View
         </a>
 
-        <!-- Botón Delete -->
+        <!-- Botón Delete: solo visible para administrador -->
+        <?php if(auth()->user()->hasRole('administrador')): ?>
         <form action="<?php echo e(route('admin.personal-quotes.destroy', $quote->id)); ?>" method="POST" 
               onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
             <?php echo csrf_field(); ?>
@@ -55,8 +60,10 @@
                 Delete
             </button>
         </form>
+        <?php endif; ?>
     </div>
 </td>
+
 
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

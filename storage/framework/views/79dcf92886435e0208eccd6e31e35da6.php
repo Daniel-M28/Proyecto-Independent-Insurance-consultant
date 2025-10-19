@@ -34,69 +34,81 @@
                 What would you like to do today?
             </p>
 
-           <div 
+  <div 
   class="<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin.users.index')): ?> 
             mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto 
          <?php else: ?> 
-            mt-8 flex justify-center gap-6 flex-wrap 
+            mt-8 flex flex-col sm:flex-row justify-center items-center gap-6 flex-wrap 
          <?php endif; ?>">
-
-    
-    <a href="<?php echo e(route('certificados.index')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 
-              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-        Generate COI
-    </a>
-
-    <a href="<?php echo e(route('policies.index')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
-              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-        View My Policy
-    </a>
 
     
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin.users.index')): ?>
     <a href="<?php echo e(route('admin.users.index')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-green-700 
+       class="w-full sm:w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 
               text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
         Users
     </a>
     <?php endif; ?>
 
-    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin')): ?>
-    <a href="<?php echo e(route('admin.regulatorios')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+    
+    <a href="<?php echo e(route('certificados.index')); ?>"
+       class="w-full sm:w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 
               text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-       Regulatory
+        Generate COI
     </a>
 
-    <a href="<?php echo e(route('admin.factoring')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
-              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-        Factoring
-    </a>
-
-    <a href="<?php echo e(route('admin.commercial.index')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
-              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-        Commercial Quotes
-    </a>
-
-    <a href="<?php echo e(route('admin.personal-quotes.index')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
-              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-        Personal Quotes
-    </a>
-
-    <a href="<?php echo e(route('admin.new-company.index')); ?>"
-       class="w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
-              text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
-        New Companies
-    </a>
+    
+    <?php if(auth()->user()->hasRole('administrador')): ?>
+        <a href="<?php echo e(route('policies.index')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+            View my policy
+        </a>
+    <?php else: ?>
+        <a href="<?php echo e(route('policies.index')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+            View my policy
+        </a>
     <?php endif; ?>
+
+    
+    <?php if(auth()->user()->hasRole('administrador') || auth()->user()->hasRole('asesor')): ?>
+
+        <a href="<?php echo e(route('admin.commercial.index')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-blue-600 hover:bg-blue-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+            Commercial quotes
+        </a>
+
+        <a href="<?php echo e(route('admin.regulatorios')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+           Regulatory
+        </a>
+
+        <a href="<?php echo e(route('admin.factoring')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+            Factoring
+        </a>
+
+        <a href="<?php echo e(route('admin.new-company.index')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+            New companies
+        </a>
+
+        <a href="<?php echo e(route('admin.personal-quotes.index')); ?>"
+           class="w-full sm:w-64 h-16 flex items-center justify-center bg-green-600 hover:bg-green-700 
+                  text-white text-lg font-semibold text-center rounded-lg shadow-lg transition">
+            Personal quotes
+        </a>
+
+    <?php endif; ?>
+
 </div>
 
-        </div>
     </div>
 </div>
 

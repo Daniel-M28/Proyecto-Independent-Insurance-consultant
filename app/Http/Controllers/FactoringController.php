@@ -43,7 +43,7 @@ class FactoringController extends Controller
         $factoring->delete();
     
         return redirect()->route('factorings.index')
-                         ->with('error', 'request successfully deleted');
+                         ->with('success', 'request successfully deleted');
     }
 
 

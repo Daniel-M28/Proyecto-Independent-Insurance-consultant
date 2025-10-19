@@ -11,6 +11,35 @@
 
         <!-- Sección de información -->
         <div class="w-full lg:w-1/2 p-8 lg:p-16 bg-zinc-800">
+
+        <!-- Mensajes de éxito y error, responsive -->
+<div class="block lg:hidden mb-6">
+    <?php if(session('success')): ?>
+        <div class="mb-4 p-3 bg-green-600 text-white rounded">
+            <?php echo e(session('success')); ?>
+
+        </div>
+    <?php endif; ?>
+
+    <?php if(session('error')): ?>
+        <div class="mb-4 p-3 bg-red-600 text-white rounded">
+            <?php echo e(session('error')); ?>
+
+        </div>
+    <?php endif; ?>
+
+    <?php if($errors->any()): ?>
+        <div class="mb-4 p-3 bg-red-600 text-white rounded">
+            <ul class="list-disc pl-5">
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li><?php echo e($error); ?></li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+</div>
+
+
             <h1 class="text-4xl font-bold mb-6">Creación de nueva compañía</h1>
             <p class="text-lg leading-relaxed">
                 Proporciona la siguiente información para crear tu nueva compañía. Completa cada campo con los datos solicitados. Nos pondremos en contacto contigo lo antes posible.
@@ -21,33 +50,43 @@
         <!-- Formulario -->
         <div class="w-full lg:w-1/2 bg-[#121212] p-8 lg:p-16">
 
-            <!-- Mensajes de éxito y error -->
-            <?php if(session('success')): ?>
-                <div class="mb-4 p-3 bg-green-600 text-white rounded">
-                    <?php echo e(session('success')); ?>
+      <?php if(session('success')): ?>
+    <div class="hidden lg:block mb-4 p-3 bg-green-600 text-white rounded">
+        <?php echo e(session('success')); ?>
 
-                </div>
-            <?php endif; ?>
+    </div>
+<?php endif; ?>
 
-            <?php if(session('error')): ?>
-                <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                    <?php echo e(session('error')); ?>
+<?php if(session('error')): ?>
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        <?php echo e(session('error')); ?>
 
-                </div>
-            <?php endif; ?>
+    </div>
+<?php endif; ?>
 
-            <?php if($errors->any()): ?>
-                <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                    <ul class="list-disc pl-5">
-                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li><?php echo e($error); ?></li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+<?php if($errors->any()): ?>
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        <ul class="list-disc pl-5">
+            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <li><?php echo e($error); ?></li>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </ul>
+    </div>
+<?php endif; ?>
 
-            <form action="<?php echo e(route('admin.new-company.store')); ?>" method="POST" enctype="multipart/form-data" class="space-y-6 text-white">
+            <form action="<?php echo e(route('admin.new-company.store')); ?>" method="POST" enctype="multipart/form-data" class="space-y-6 text-white" id="CompanyForm">
                 <?php echo csrf_field(); ?>
+
+<!-- Contenedor del spinner y texto -->
+<div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
+    <div class="flex items-center gap-2">
+        <!-- Spinner -->
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <!-- Texto -->
+        <span class="text-white font-semibold text-lg">Submitting request...</span>
+    </div>
+</div>
+
 
                 <!-- Company Name (3 options) -->
                 <div>
@@ -182,6 +221,21 @@ unset($__errorArgs, $__bag); ?>
                     </button>
                 </div>
             </form>
+
+            <!-- Script para manejar el spinner  -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('CompanyForm');
+    const loader = document.getElementById('loader');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', () => {
+        loader.classList.remove('hidden'); // muestra el spinner
+        submitButton.disabled = true;      // desactiva el botón
+        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    });
+});
+</script>
         </div>
     </div>
 </div>

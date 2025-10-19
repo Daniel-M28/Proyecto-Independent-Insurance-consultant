@@ -19,12 +19,7 @@
 }
 
 
-/*Mapa de inicio*/
- #map {
-      height: 300px;
-      width: 40%;
-    }
-  
+
 
     /*translate */
     
@@ -50,3 +45,20 @@ body { top: 0 !important; }
   border-radius: 3px;
   display: block;
 }
+
+
+/* Mapa de contacto */
+  #map {
+    height: 100%;
+    min-height: 300px;
+  }
+
+  @media (max-width: 768px) {
+    #map {
+      display: none !important; /* ocultar mapa en móvil */
+    }
+  }
+
+  #contact > .flex {
+    overflow: hidden;
+  }

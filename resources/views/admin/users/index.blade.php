@@ -30,6 +30,7 @@
     </div>
     
 {{-- Mensajes Flash Globales --}}
+
 @if(session('success'))
     <div class="mb-4 p-3 bg-green-600 text-white rounded shadow">
         {{ session('success') }}

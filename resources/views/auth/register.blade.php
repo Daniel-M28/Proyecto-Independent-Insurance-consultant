@@ -13,11 +13,23 @@
       <img src="{{ asset('imgs/loge.png') }}" alt="Logo" class="max-h-[500px] object-contain">
     </div>
 
+ <!-- Contenedor del spinner y texto -->
+<div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
+    <div class="flex items-center gap-2">
+        <!-- Spinner -->
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <!-- Texto -->
+        <span class="text-white font-semibold text-lg">Submitting request...</span>
+    </div>
+</div>
+
+
+
     <!-- Formulario -->
     <div class="w-full lg:w-1/2 bg-[#121212] p-8 lg:p-16 flex flex-col justify-center">
       <h1 class="text-white text-4xl mb-6 text-center">Register</h1>
 
-      <form method="POST" action="{{ route('register') }}" class="space-y-6">
+      <form method="POST" action="{{ route('register') }}" class="space-y-6" id="RegisterForm">
         @csrf
 
         <!-- Name -->
@@ -186,4 +198,22 @@
 
   </div>
 </div>
+
+
+
+<!-- Script para manejar el spinner  -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('RegisterForm');
+    const loader = document.getElementById('loader');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', () => {
+        loader.classList.remove('hidden'); // muestra el spinner
+        submitButton.disabled = true;      // desactiva el botón
+        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    });
+});
+</script>
+
 @endsection

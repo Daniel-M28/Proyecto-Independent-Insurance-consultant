@@ -49,7 +49,7 @@
                         lastname="password"
                         type="password"
                         placeholder="<?php echo e(__('Password')); ?>"
-                        class="w-3/4 mt-1 bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:ring focus:ring-red-500"
+                        class="w-3/4 mt-1 bg-gray-800 text-white rounded-md shadow-sm focus:ring focus:ring-red-500"
                         required
                     />
                     <?php if($errors->userDeletion->has('password')): ?>
@@ -96,5 +96,14 @@
             }
         });
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php if($errors->userDeletion->any()): ?>
+            document.getElementById('delete-account-modal').classList.remove('hidden');
+        <?php endif; ?>
+    });
+</script>
+
 </section>
 <?php /**PATH C:\xampp\htdocs\proyecto_iic\resources\views/profile/partials/delete-user-form.blade.php ENDPATH**/ ?>

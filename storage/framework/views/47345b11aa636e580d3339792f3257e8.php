@@ -11,8 +11,8 @@
             <?php endif; ?>   
 
 
-      
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin')): ?>
+     
+<?php if(auth()->user()->hasRole('administrador') || auth()->user()->hasRole('asesor')): ?>
     
     <form method="GET" action="<?php echo e(route('certificados.index')); ?>" class="flex justify-center flex-1 mb-6">
         <input type="text" name="search" value="<?php echo e(request('search')); ?>" placeholder="Search user by name or email"
@@ -20,9 +20,11 @@
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">Search</button>
     </form>
 
-    <?php if(!empty($results)): ?>
-        <div class="bg-zinc-900 p-4 rounded-lg mb-6">
-            <h2 class="text-white text-lg mb-3">Results:</h2>
+  <?php if(!empty($results)): ?>
+    <div class="bg-zinc-900 p-4 rounded-lg mb-6">
+        <h2 class="text-white text-lg mb-3">Results:</h2>
+
+        <?php if(count($results) > 0): ?>
             <ul class="space-y-2">
                 <?php $__currentLoopData = $results; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <li class="flex justify-between items-center bg-zinc-800 p-3 rounded-lg">
@@ -31,19 +33,25 @@
                             <p class="text-gray-400 text-sm"><?php echo e($r->email); ?></p>
                         </div>
                         <a href="<?php echo e(route('certificados.index', ['user_id' => $r->id])); ?>"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">See Certificate</a>
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                            See Certificate
+                        </a>
                     </li>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
-        </div>
-    <?php endif; ?>
+        <?php else: ?>
+            <p class="text-gray-400 text-center mt-2">User not found.</p>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
 
     
     <?php if($user): ?>
         <form method="POST" action="<?php echo e(route('certificados.store')); ?>" enctype="multipart/form-data">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
-            <label class="text-white block mb-2">Upload certificate for <?php echo e($user->name); ?></label>
+            <label class="text-white block mb-2">Upload certificate for <?php echo e($user->name); ?> <?php echo e($user->lastname); ?> </label>
             <input type="file" name="file" accept="application/pdf" required
                 class="block w-full text-white bg-zinc-800 border border-zinc-700 rounded-lg p-2">
             <button type="submit"
@@ -51,6 +59,28 @@
         </form>
     <?php endif; ?>
 <?php endif; ?>
+
+<!-- Modal centralizado de envío -->
+<div id="sendingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-blue-600 text-white px-8 py-6 rounded-lg shadow-lg flex items-center space-x-4 w-96">
+        <!-- Spinner -->
+        <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+        <span class="font-semibold">Sending certificate...</span>
+    </div>
+</div>
+
+
+<!-- Toast notification envio completado -->
+<div id="toast" class="hidden fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+    <div class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+        <span id="toastMessage">Correo enviado correctamente</span>
+    </div>
+</div>
+
+
 
 <?php if($certificado && Storage::disk('public')->exists($certificado->file_path)): ?>
 
@@ -172,7 +202,7 @@
 
     <?php if($certificado && Storage::disk('public')->exists($certificado->file_path)): ?>
         
-        <canvas id="pdf-canvas" class="w-full h-[700px] rounded-lg border border-gray-600 mb-6"></canvas>
+        
 
        
     <?php else: ?>
@@ -330,84 +360,118 @@ firstPage.drawText(fecha, {
 </script>
 
 <script>
-    // Función específica para enviar el PDF editado por correo
-    document.getElementById('enviarCorreo').addEventListener('click', async () => {
-    const form = document.getElementById('formPdf');
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const enviarBtn = document.getElementById('enviarCorreo');
+    const modal = document.getElementById('sendingModal');
+    const textarea = document.getElementById('empresa');
+    const contador = document.getElementById('contador');
+
+    if (!enviarBtn || !modal) return;
+
+    enviarBtn.addEventListener('click', async () => {
+        const form = document.getElementById('formPdf');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
 
         const correo1 = document.getElementById('correo1').value.trim();
         const correo2 = document.getElementById('correo2').value.trim();
+        if (!correo1 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo1)) return showToast('Ingresa un correo válido.', 4000);
+        if (correo2 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo2)) return showToast('El segundo correo no es válido.', 4000);
+        if (!currentPdfUrl) return showToast('Primero selecciona un PDF.', 4000);
 
-        if (!correo1 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo1)) {
-            return alert('Ingresa un correo válido (obligatorio).');
-        }
+        // Mostrar modal centralizado
+        modal.classList.remove('hidden');
 
-        if (correo2 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo2)) {
-            return alert('El segundo correo no es válido.');
-        }
+        try {
+            const existingPdfBytes = await fetch(currentPdfUrl).then(res => res.arrayBuffer());
+            const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+            const firstPage = pdfDoc.getPages()[0];
 
-        if (!currentPdfUrl) {
-            return alert('Primero selecciona un PDF.');
-        }
+            const empresa = textarea.value || 'Empresa Ejemplo S.A.';
+            const fecha = document.getElementById('fecha').value || new Date().toLocaleDateString();
+            const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
 
-        // Reutiliza tu lógica de edición del PDF (debes tener esta función ya en tu código)
-        const existingPdfBytes = await fetch(currentPdfUrl).then(res => res.arrayBuffer());
-        const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
-        const firstPage = pdfDoc.getPages()[0];
-
-        const empresa = document.getElementById('empresa').value || 'Empresa Ejemplo S.A.';
-        const fecha = document.getElementById('fecha').value || new Date().toLocaleDateString();
-        const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-
-        // Dibuja empresa
-        firstPage.drawRectangle({ x: 45, y: 98, width: 200, height: 30, color: PDFLib.rgb(1, 1, 1) });
-        const lines = empresa.split('\n');
-        let startY = 98;
-        lines.forEach((line) => {
-            firstPage.drawText(line, {
-                x: 45,
-                y: startY,
-                size: 10,
-                font: font,
-                color: PDFLib.rgb(0, 0, 0),
+            // Dibuja empresa
+            firstPage.drawRectangle({ x: 45, y: 98, width: 200, height: 30, color: PDFLib.rgb(1,1,1) });
+            let startY = 98;
+            empresa.split('\n').forEach(line => {
+                firstPage.drawText(line, { x: 45, y: startY, size: 10, font, color: PDFLib.rgb(0,0,0) });
+                startY -= 10;
             });
-            startY -= 10;
-        });
 
-        // Dibuja fecha
-        firstPage.drawRectangle({ x: 530, y: 745, width: 50, height: 10, color: PDFLib.rgb(1, 1, 1) });
-        firstPage.drawText(fecha, { x: 530, y: 745, size: 8, font: font, color: PDFLib.rgb(0, 0, 0) });
+            // Dibuja fecha
+            firstPage.drawRectangle({ x: 530, y: 745, width: 50, height: 10, color: PDFLib.rgb(1,1,1) });
+            firstPage.drawText(fecha, { x: 530, y: 745, size: 8, font, color: PDFLib.rgb(0,0,0) });
 
-        // Guarda PDF en blob
-        const pdfBytes = await pdfDoc.save();
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            // Guarda PDF en blob
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-        // Enviar al servidor
-        const formData = new FormData();
-        formData.append('pdf', blob, 'certificado_editado.pdf');
-        formData.append('correo1', correo1);
-        if (correo2) formData.append('correo2', correo2);
+            // Preparar FormData para enviar
+            const formData = new FormData();
+            formData.append('pdf', blob, 'certificado_editado.pdf');
+            formData.append('correo1', correo1);
+            if (correo2) formData.append('correo2', correo2);
 
-        fetch("<?php echo e(route('certificados.sendPdf')); ?>", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message || 'Correo(s) enviado(s) correctamente.');
-        })
-        .catch(error => {
+            // Enviar al backend
+            const response = await fetch("<?php echo e(route('certificados.sendPdf')); ?>", {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            // Ocultar modal y mostrar mensaje final
+            modal.classList.add('hidden');
+            showToast(data.message || 'Correo(s) enviado(s) correctamente.');
+
+            // --- Limpiar inputs ---
+            document.getElementById('correo1').value = '';
+            document.getElementById('correo2').value = '';
+            textarea.value = '';
+            document.getElementById('fecha').value = '';
+            if (contador) contador.textContent = '0 / 120 caracteres';
+
+        } catch (error) {
+            modal.classList.add('hidden');
             console.error('Error:', error);
-            alert('Error al enviar el correo.');
-        });
+            showToast('Error al enviar el correo.', 6000);
+        }
     });
+});
 </script>
+
+
+<!-- Script para mostrar toast notification de enviado-->
+<script>
+function showToast(message, duration = 3000) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage.textContent = message;
+    
+    toast.classList.remove('hidden');
+    
+    // Fade in
+    toast.style.opacity = 0;
+    toast.style.transition = 'opacity 0.3s';
+    requestAnimationFrame(() => {
+        toast.style.opacity = 1;
+    });
+
+    // Ocultar después de 'duration'
+    setTimeout(() => {
+        toast.style.opacity = 0;
+        toast.addEventListener('transitionend', () => {
+            toast.classList.add('hidden');
+        }, { once: true });
+    }, duration);
+}
+</script>
+
+    
 
 
 <?php $__env->stopSection(); ?>

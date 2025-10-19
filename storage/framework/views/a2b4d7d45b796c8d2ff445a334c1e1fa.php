@@ -5,6 +5,12 @@
 
     <h1 class="text-3xl font-bold mb-6 text-center text-white">Factoring Requests</h1>
 
+ <?php if(session('success')): ?>
+            <div class="bg-green-600 text-white p-3 rounded mb-4 text-center"><?php echo e(session('success')); ?></div>
+        <?php endif; ?>
+
+
+
    <?php if(session('error')): ?>
     <div class="mb-4 p-3 bg-red-600 text-white rounded shadow">
         <?php echo e(session('error')); ?>
@@ -43,17 +49,20 @@
                         <td class="px-6 py-4"><?php echo e(\Carbon\Carbon::parse($request->created_at)->format('Y-m-d H:i')); ?></td>
 
                         <td class="px-6 py-4 flex justify-center">
-                            
-                            <form action="<?php echo e(route('factorings.destroy', $request->id)); ?>" method="POST" 
-                                  onsubmit="return confirm('¿Seguro que quieres eliminar esta solicitud?');">
-                                <?php echo csrf_field(); ?>
-                                <?php echo method_field('DELETE'); ?>
-                                <button type="submit" 
-                                        class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
+    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin')): ?>
+        
+        <form action="<?php echo e(route('factorings.destroy', $request->id)); ?>" method="POST" 
+              onsubmit="return confirm('¿Seguro que quieres eliminar esta solicitud?');">
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('DELETE'); ?>
+            <button type="submit" 
+                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md">
+                Eliminar
+            </button>
+        </form>
+    <?php endif; ?>
+</td>
+
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>

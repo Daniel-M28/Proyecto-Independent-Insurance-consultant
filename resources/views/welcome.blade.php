@@ -1,12 +1,10 @@
 @extends('layouts.app')
 @php $fullWidth = true; @endphp 
 
-
 @section('content')
 
-{{--Muestra la confirmación de eliminacion de perfil de usuario y redirige el inicios--}}
-
- @if (session('status'))
+{{--Muestra la confirmación de eliminacion de perfil de usuario 5s --}}
+  @if (session('status'))
     <div id="alert-status"  
          class="fixed top-4 left-1/2 transform -translate-x-1/2 
                 bg-green-600 text-white p-4 rounded mb-4 text-center shadow-lg 
@@ -32,6 +30,7 @@
   <div class="absolute inset-0 bg-black bg-opacity-75 flex flex-col justify-center items-center text-center text-white px-4">
     <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Independent Insurance Consultant</h1>
     <h2 class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6">Coverage for your business</h2>
+    
     <!--Button get a quote-->
     <a href="{{ route('quote') }}" class="bg-blue-800 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded">
       Get a quote
@@ -44,29 +43,35 @@
   <section id="about" class="w-full bg-zinc-900 text-white py-12 px-4 md:px-8 scroll-mt-20">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
     
-    <!-- left image -->
-    <div class="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
-      <img src="{{ asset('imgs/about-section.png') }}" alt="About Image" class="w-64 md:w-80 lg:w-[28rem]">
-    </div>
+      <!-- left image -->
+      <div class="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
+        <img src="{{ asset('imgs/about-section.png') }}" alt="About Image" class="w-64 md:w-80 lg:w-[28rem]">
+      </div>
 
-    <!-- right text -->
-    <div class="w-full md:w-1/2 md:pl-8">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">ABOUT US</h2>
-      <p class="text-gray-300 mb-6">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, quisquam accusantium nostrum modi, nemo, officia veritatis ipsum facere maxime assumenda voluptatum enim! Labore maiores placeat impedit, vero sed est voluptas! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita alias dicta autem, maiores doloremque quo perferendis, ut obcaecati harum,
-      </p>
-      <p class="text-gray-300 mb-6">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum necessitatibus iste, nulla recusandae porro minus nemo eaque cum repudiandae quidem voluptate magnam voluptatum? <br>
-        Nobis, saepe sapiente omnis qui eligendi pariatur. quis voluptas. Assumenda facere adipisci quaerat. Illum doloremque quae omnis vitae.
-      </p>
-      <p class="font-bold text-white mb-6">
-        Lonsectetur adipisicing elit. Blanditiis aspernatur, ratione dolore vero asperiores explicabo.
-      </p>
-      <p class="text-gray-300">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos ab itaque modi, reprehenderit fugit soluta, molestias optio repellat incidunt iure sed deserunt nemo magnam rem explicabo vitae. Cum, nostrum, quidem.
-      </p>
+      <!-- right text -->
+      <div class="w-full md:w-1/2 md:pl-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">ABOUT US</h2>
+         <p class="text-gray-300 mb-6">
+            At Independent Insurance Consultant, we specialize in providing commercial truck insurance
+             solutions designed to protect drivers, independent owner-operators, and fleet businesses 
+             across the United States.
+            
+            <br>We know that your truck is more than just a vehicle — it's your business, your 
+            livelihood, and your future. That's why we're dedicated to offering reliable, affordable,
+            and customized coverage that fits your unique needs, from commercial auto liability
+            to cargo and physical damage protection.
+            <br><br>Our mission is simple: to help you stay protected, compliant, and confident 
+            on every mile of your journey. With personalized service and expert guidance, 
+            we make insurance easy to understand and easy to trust.
+          </p>
+     
+        <p class="font-bold text-white mb-6">
+          At Independent Insurance Consultant, you're not just getting a policy — you're gaining
+           a partner committed to keeping you and your business moving forward.
+        </p>
+      
+     </div>
     </div>
-  </div>
 </section>
 
    
@@ -154,32 +159,28 @@
 </section>
 
 
-   <!-- REVIEWS Section -->
-<section id="testmonial" class="w-full bg-zinc-900 text-white py-16 border-t border-gray-800 scroll-mt-20 h-[500px]">
+ <!-- REVIEWS Section -->
+<section id="testmonial" class="w-full bg-zinc-900 text-white py-16 border-t border-gray-800 scroll-mt-20 min-h-[500px]">
   <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">REVIEWS</h2>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       
-      <!-- Review Card -->
-      <div class="bg-zinc-800 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow">
-        <h3 class="text-xl font-semibold mb-1">John Doe</h3>
-        <h6 class="text-sm text-gray-400 mb-4">Web Designer</h6>
-        <p class="text-gray-300 text-sm leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum nobis eligendi, quaerat accusamus ipsum sequi dignissimos consequuntur blanditiis natus. Aperiam!</p>
+      <div class="bg-zinc-800 p-6 rounded-2xl shadow-md transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:bg-zinc-700/90">
+        <h3 class="text-xl font-semibold mb-1">Veronica Rossi</h3>
+        <h6 class="text-sm text-gray-400 mb-4">Union, SC</h6>
+        <p class="text-gray-300 text-sm leading-relaxed">“With Independent Insurance Consultant I feel at ease. They not only helped me with my truck insurance but also with all the regulatory paperwork. They explained everything step by step and made sure everything was done right. Very professional and friendly team.”</p>
       </div>
 
-      <!-- Review Card -->
-      <div class="bg-zinc-800  p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow">
-        <h3 class="text-xl font-semibold mb-1">Steve Thomas</h3>
-        <h6 class="text-sm text-gray-400 mb-4">UX/UI Designer</h6>
-        <p class="text-gray-300 text-sm leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum minus obcaecati cum eligendi perferendis magni dolorum ipsum magnam, sunt reiciendis natus. Aperiam!</p>
+      <div class="bg-zinc-800 p-6 rounded-2xl shadow-md transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:bg-zinc-700/90">
+        <h3 class="text-xl font-semibold mb-1">Gorge Perez Reyes</h3>
+        <h6 class="text-sm text-gray-400 mb-4">Greenwood, IN</h6>
+        <p class="text-gray-300 text-sm leading-relaxed">“With Independent Insurance Consultant I feel at ease. They not only helped me with my truck insurance but also with all the regulatory paperwork. They explained everything step by step and made sure everything was done right.”</p>
       </div>
 
-      <!-- Review Card -->
-      <div class="bg-zinc-800  p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow">
-        <h3 class="text-xl font-semibold mb-1">Miranda Joy</h3>
-        <h6 class="text-sm text-gray-400 mb-4">Graphic Designer</h6>
-        <p class="text-gray-300 text-sm leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, nam. Earum nobis eligendi, dignissimos consequuntur blanditiis natus. Aperiam!</p>
+      <div class="bg-zinc-800 p-6 rounded-2xl shadow-md transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:bg-zinc-700/90">
+        <h3 class="text-xl font-semibold mb-1">Joshua Encarnación</h3>
+        <h6 class="text-sm text-gray-400 mb-4">Tampa, FL</h6>
+        <p class="text-gray-300 text-sm leading-relaxed">“I had an issue with my policy and they helped me right away. They offered fast and effective solutions, and that makes all the difference. A reliable service with people who truly understand the needs of Latino truck drivers.”</p>
       </div>
 
     </div>
@@ -187,36 +188,30 @@
 </section>
 
 
-  <!-- CONTACT Section -->
-  <div id="contact" class="w-full bg-zinc-800 text-white border-t border-gray-700">
-    <div class="flex flex-col md:flex-row">
-      
-      <!-- Map -->
-  <div id="map" ></div>
+<div class="h-8 bg-transparent"></div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  
+<!-- CONTACT Section -->
+<div id="contact" class="w-full bg-zinc-800 text-white border-t border-gray-700">
+  <div class="flex flex-col md:flex-row">
+    <!-- Map -->
+    <div id="map" class="w-full md:w-1/2"></div>
 
-
-      <!-- contact information -->
-      <div class="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center">
-        <h3 class="text-2xl font-semibold mb-4">FIND US</h3>
-        <p class="text-gray-300 mb-6">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, laboriosam doloremque odio delectus, sunt magnam laborum impedit molestiae, magni quae ipsum, ullam eos! Alias suscipit impedit et, adipisci illo quam.
-        </p>
-        <div class="text-gray-400 space-y-2 text-sm">
-          <p><span class="pr-2">📍</span> 7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
-          <p><span class="pr-2">📞</span> (765) 244-5222</p>
-          <p><span class="pr-2">✉️</span> info@website.com</p>
-        </div>
+    <!-- Contact info -->
+    <div class="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center mt-16 md:mt-0">
+      <h3 class="text-2xl font-semibold mb-4">FIND US</h3>
+      <p class="text-gray-300 mb-6">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, laboriosam doloremque odio delectus.
+      </p>
+      <div class="text-gray-400 space-y-2 text-sm">
+        <p><span class="pr-2">📍</span> 7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
+        <p><span class="pr-2">📞</span> (765) 244-5222</p>
+        <p><span class="pr-2">✉️</span> info@website.com</p>
       </div>
-
     </div>
   </div>
+</div>
 
-
-
-
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
  
 @endsection

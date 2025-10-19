@@ -9,44 +9,59 @@
             <div class="bg-green-600 text-white p-3 rounded mb-4 text-center">{{ session('success') }}</div>
         @endif
 
-        {{-- Admin --}}
-        @can('admin')
-            {{-- Buscador --}}
-            <form method="GET" action="{{ route('policies.index') }}" class="flex justify-center flex-1 mb-6">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search user by name or email"
-                    class="w-1/2 px-4 py-2 bg-zinc-700 border border-zinc-700 text-white rounded-l-md focus:outline-none placeholder-gray-400" />
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">Search</button>
-            </form>
+       {{-- Admin y Asesor --}}
+@if(auth()->user()->hasRole('administrador') || auth()->user()->hasRole('asesor'))
 
-            @if(!empty($results))
-                <div class="bg-zinc-900 p-4 rounded-lg mb-6">
-                    <h2 class="text-white text-lg mb-3">Results:</h2>
-                    <ul class="space-y-2">
-                        @foreach($results as $r)
-                            <li class="flex justify-between items-center bg-zinc-800 p-3 rounded-lg">
-                                <div>
-                                    <p class="text-white font-semibold">{{ $r->name }}</p>
-                                    <p class="text-gray-400 text-sm">{{ $r->email }}</p>
-                                </div>
-                                <a href="{{ route('policies.index',['user_id'=>$r->id]) }}"
-                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">See policy</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+    {{-- Buscador --}}
+    <form method="GET" action="{{ route('policies.index') }}" class="flex justify-center flex-1 mb-6">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search user by name or email"
+            class="w-1/2 px-4 py-2 bg-zinc-700 border border-zinc-700 text-white rounded-l-md focus:outline-none placeholder-gray-400" />
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">
+            Search
+        </button>
+    </form>
 
-            {{-- Subir PDF --}}
-            @if($user)
-                <form method="POST" action="{{ route('policies.store') }}" enctype="multipart/form-data" onsubmit="return confirmarReemplazo()">
-                    @csrf
-                    <input type="hidden" name="user_id" value="{{ $user->id }}">
-                    <label class="text-white block mb-2">Upload policy {{ $user->name }} {{$user->lastname}}</label>
-                    <input type="file" name="file" accept="application/pdf" required class="block w-full text-white bg-zinc-800 border border-zinc-700 rounded-lg p-2">
-                    <button type="submit" class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">Upload policy</button>
-                </form>
+    @if(!empty($results))
+        <div class="bg-zinc-900 p-4 rounded-lg mb-6">
+            <h2 class="text-white text-lg mb-3">Results:</h2>
+
+            @if(count($results) > 0)
+                <ul class="space-y-2">
+                    @foreach($results as $r)
+                        <li class="flex justify-between items-center bg-zinc-800 p-3 rounded-lg">
+                            <div>
+                                <p class="text-white font-semibold">{{ $r->name }}</p>
+                                <p class="text-gray-400 text-sm">{{ $r->email }}</p>
+                            </div>
+                            <a href="{{ route('policies.index', ['user_id' => $r->id]) }}"
+                               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                               See policy
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-gray-400 text-center mt-4">User not found.</p>
             @endif
-        @endcan
+        </div>
+    @endif
+
+    {{-- Subir PDF --}}
+    @if($user)
+        <form method="POST" action="{{ route('policies.store') }}" enctype="multipart/form-data" onsubmit="return confirmarReemplazo()">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <label class="text-white block mb-2">Upload policy {{ $user->name }} {{ $user->lastname }}</label>
+            <input type="file" name="file" accept="application/pdf" required
+                   class="block w-full text-white bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+            <button type="submit"
+                    class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                Upload policy
+            </button>
+        </form>
+    @endif
+
+@endif
 
        {{-- Contenedor PDF --}}
 <div id="pdfContainer" class="mt-10">

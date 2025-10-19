@@ -8,6 +8,34 @@
 
     <!-- Sección izquierda con info e imágenes -->
     <div class="w-full lg:w-1/2 p-8 lg:p-16 bg-zinc-800">
+        
+    <!-- Mensajes de éxito y error -->
+    <div class="block lg:hidden mb-6">
+    @if(session('success'))
+        <div class="mb-4 p-3 bg-green-600 text-white rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-4 p-3 bg-red-600 text-white rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="mb-4 p-3 bg-red-600 text-white rounded">
+            <ul class="list-disc pl-5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+</div>
+
+
+
       <h1 class="text-4xl font-bold mb-6">Commercial Insurance Quote</h1>
       <p class="text-lg leading-relaxed">
         Provide the following information to obtain your quote.
@@ -31,28 +59,39 @@
     <div class="w-full lg:w-1/2 bg-[#121212] p-8 lg:p-16">
       
       <!-- Formulario Comercial -->
- <!-- Mensajes de éxito y error -->
+
+ <!-- Mensajes de éxito y error, responsive -->
             @if(session('success'))
-                <div class="mb-4 p-3 bg-green-600 text-white rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
+    <div class="hidden lg:block mb-4 p-3 bg-green-600 text-white rounded">
+        {{ session('success') }}
+    </div>
+@endif
 
-            @if(session('error'))
-                <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                    {{ session('error') }}
-                </div>
-            @endif
+@if(session('error'))
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        {{ session('error') }}
+    </div>
+@endif
 
-            @if($errors->any())
-                <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                    <ul class="list-disc pl-5">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+@if($errors->any())
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
+<!-- Spinner compartido, fuera de los formularios -->
+<div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
+    <div class="flex items-center gap-2">
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <span class="text-white font-semibold text-lg">Submitting request...</span>
+    </div>
+</div>
+
 
 <form 
     id="form-comercial" 
@@ -62,6 +101,8 @@
     class="space-y-6"
 >
     @csrf
+
+
     <h2 class="text-2xl font-bold mb-4">Commercial Form</h2>
 
     <!-- USDOT -->
@@ -318,6 +359,30 @@
 
 
 <!-- Formulario Auto Personal -->
+ 
+
+ @if(session('success'))
+    <div class="hidden lg:block mb-4 p-3 bg-green-600 text-white rounded">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
+        <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <form 
     id="form-personal" 
     action="{{ route('admin.personal-quotes.store') }}" 
@@ -326,6 +391,9 @@
     class="space-y-6 hidden"
 >
     @csrf
+    <!-- Contenedor del spinner y texto -->
+
+
     <h2 class="text-2xl font-bold mb-4">Personal Vehicle Form</h2>
 
     <!-- Name -->
@@ -658,6 +726,32 @@
   document.addEventListener('DOMContentLoaded', () => {
     mostrarFormulario('comercial');
   });
+</script>
+
+
+<!-- Script para manejar el spinner  -->
+<!-- Script para manejar un spinner compartido entre dos formularios -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const forms = [
+        document.getElementById('form-comercial'),
+        document.getElementById('form-personal')
+    ];
+
+    const loader = document.getElementById('loader'); // spinner compartido
+
+    forms.forEach(form => {
+        if (form) {
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            form.addEventListener('submit', () => {
+                loader.classList.remove('hidden'); // muestra el spinner
+                submitButton.disabled = true;      // desactiva el botón
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+        }
+    });
+});
 </script>
 
 

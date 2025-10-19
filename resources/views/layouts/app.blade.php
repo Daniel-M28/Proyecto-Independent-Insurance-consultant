@@ -27,12 +27,14 @@
     <nav class="fixed top-0 left-0 w-full z-50 bg-transparent text-white">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center px-4 md:px-6 py-4">
             
+
+        
             <!-- Left nav -->
             <ul class="hidden md:flex space-x-6 font-semibold p-2">
                 <li><a href="{{ url('/')}}#home" class="hover:text-gray-300">Home</a></li>
                 <li><a href="{{ url('/')}}#about" class="hover:text-gray-300">About</a></li>
                 <li><a href="{{ url('/')}}#services" class="hover:text-gray-300">Services</a></li>
-                <li><a href="{{ url('/')}}#reviews" class="hover:text-gray-300">Reviews</a></li>
+                <li><a href="{{ url('/')}}#testmonial" class="hover:text-gray-300">Reviews</a></li>
                 <li><a href="{{ url('/')}}#contact" class="hover:text-gray-300">Contact Us</a></li>
             </ul>
 
@@ -112,37 +114,107 @@
                 </li>
             </ul>
 
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="md:hidden hidden px-4 pt-2 pb-4 space-y-2 font-semibold bg-black bg-opacity-80">
-                <a href="#home" class="block hover:text-gray-300">Home</a>
-                <a href="#about" class="block hover:text-gray-300">About</a>
-                <a href="#blog" class="block hover:text-gray-300">Services</a>
-                <a href="#testmonial" class="block hover:text-gray-300">Reviews</a>
-                <a href="#contact" class="block hover:text-gray-300">Contact Us</a>
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="block hover:text-gray-300">{{ auth()->user()->name }}</a>
-                    @else
-                        <a href="{{ route('login') }}" class="block hover:text-gray-300">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="block hover:text-gray-300">Register</a>
-                        @endif
-                    @endauth
-                @endif
-
-                <!-- Banderas también en móvil -->
-                <div class="flex items-center space-x-2 pt-2">
-                    <button class="btn-lang" data-lang="es">
-                        <img src="{{ asset('imgs/es.png') }}" alt="Español" width="24" height="16">
-                    </button>
-                    <button class="btn-lang" data-lang="en">
-                        <img src="{{ asset('imgs/en.png') }}" alt="English" width="24" height="16">
-                    </button>
-                </div>
-            </div>
+            
         </div>
     </nav>
 </header>
+
+
+<!--  Mobile menu  -->
+    <!-- Mobile menu -->
+<div id="mobile-menu"
+     class="md:hidden hidden fixed inset-0 top-0 left-0 w-full px-4 pt-2 pb-6 space-y-3 font-semibold 
+            bg-black bg-opacity-95 z-50 backdrop-blur-md transition-all duration-300 overflow-y-auto">
+
+
+            <!-- Checkbox oculto que controla el menú -->
+        <input type="checkbox" id="menu-toggle" class="hidden peer" />
+
+        <!-- Botón hamburguesa -->
+        <label for="menu-toggle" class="cursor-pointer md:hidden z-50 ">
+      <!-- Ícono hamburguesa -->
+      <svg
+        class="w-7 h-7 peer-checked:hidden"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
+
+      <!-- Ícono cerrar -->
+      <svg
+        class="w-7 h-7 hidden peer-checked:block"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        ></path>
+        </svg>
+     </label>
+
+
+
+        <nav class="space-y-3 mt-8">
+            <a href="{{ url('/')}}#home" class="block hover:text-gray-300 transition">Home</a>
+            <a href="{{ url('/')}}#about" class="block hover:text-gray-300 transition">About</a>
+            <a href="{{ url('/')}}#services" class="block hover:text-gray-300 transition">Services</a>
+            <a href="{{ url('/')}}#testmonial" class="block hover:text-gray-300 transition">Reviews</a>
+            <a href="{{ url('/')}}#contact" class="block hover:text-gray-300 transition">Contact Us</a>
+        </nav>
+
+        <div class="border-t border-gray-700 pt-4">
+            @if (Route::has('login'))
+                @auth
+                    <div class="space-y-2">
+                        <p class="text-gray-400 text-sm">Signed in as:</p>
+                        <p class="text-lg font-semibold">{{ auth()->user()->name }}</p>
+
+                        <div class="flex flex-col space-y-2 pt-2">
+                            <a href="{{ url('/dashboard') }}" class="block bg-blue-600 hover:bg-blue-700 text-center rounded-lg py-2 transition">Dashboard</a>
+                            <a href="{{ route('profile.edit') }}" class="block bg-green-600 hover:bg-green-700 text-center rounded-lg py-2 transition">Profile</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg py-2 transition">Log out</button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <div class="flex flex-col space-y-2">
+                        <a href="{{ route('login') }}" class="block bg-blue-700 hover:bg-blue-800 text-center rounded-lg py-2 transition">Log in</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="block bg-blue-700 hover:bg-blue-800 text-center rounded-lg py-2 transition">Register</a>
+                        @endif
+                    </div>
+                @endauth
+            @endif
+        </div>
+
+        <div class="flex items-center justify-center space-x-3 border-t border-gray-700 pt-4">
+            <button class="btn-lang" data-lang="es">
+                <img src="{{ asset('imgs/es.png') }}" alt="Español" width="28" height="18">
+            </button>
+            <button class="btn-lang" data-lang="en">
+                <img src="{{ asset('imgs/en.png') }}" alt="English" width="28" height="18">
+            </button>
+        </div>
+
+
+   
+    </div>
+</nav>
 
 
 

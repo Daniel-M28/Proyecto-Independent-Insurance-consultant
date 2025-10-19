@@ -35,14 +35,15 @@
                         <td class="px-6 py-4"><?php echo e($req->email); ?></td>
                         <td class="px-6 py-4"> <?php echo e($req->created_at->timezone('America/Bogota')->format('Y-m-d H:i')); ?></td>
                         <td class="px-6 py-4">
-                 <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2">
         <!-- Botón View -->
         <a href="<?php echo e(route('admin.commercial.show', $req->id)); ?>" 
            class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
             View
         </a>
 
-        <!-- Botón Delete -->
+        <!-- Botón Delete: solo visible para administrador -->
+        <?php if(auth()->user()->hasRole('administrador')): ?>
         <form action="<?php echo e(route('admin.commercial.destroy', $req->id)); ?>" method="POST" 
               onsubmit="return confirm('¿Seguro que deseas eliminar esta solicitud?');">
             <?php echo csrf_field(); ?>
@@ -52,8 +53,10 @@
                 Delete
             </button>
         </form>
+        <?php endif; ?>
     </div>
 </td>
+
 
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

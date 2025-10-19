@@ -82,6 +82,6 @@ class CompanyController extends Controller
         $company->delete();
 
         return redirect()->route('admin.new-company.index')
-                         ->with('error', 'Company request deleted successfully!');
+                         ->with('success', 'Company request deleted successfully!');
     }
 }

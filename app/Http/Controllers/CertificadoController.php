@@ -73,7 +73,7 @@ $pdfUrls = [];      // nunca null
             'uploaded_by' => auth()->id(),
         ]);
 
-        return back()->with('success', 'Certificado subido correctamente.');
+        return back()->with('success', 'Certificate uploaded successfully.');
     }
 
    public function sendPdf(Request $request)
@@ -95,7 +95,7 @@ $pdfUrls = [];      // nunca null
         // Limpieza opcional del archivo temporal después de enviar
         Storage::delete($path);
 
-        return response()->json(['message' => 'PDF enviado correctamente']);
+        return response()->json(['message' => 'Certificate sent successfully']);
     }
 
     return response()->json(['message' => 'No se encontró el archivo'], 400);
@@ -119,19 +119,19 @@ $pdfUrls = [];      // nunca null
 
         // Si fue una petición AJAX, devolver JSON
         if (request()->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Certificado eliminado correctamente.']);
+            return response()->json(['success' => true, 'message' => 'Certificate successfully deleted.']);
         }
 
-        return back()->with('success', 'Certificado eliminado correctamente.');
+        return back()->with('success', 'Certificate successfully deleted..');
 
     } catch (\Exception $e) {
         \Log::error('Error al eliminar certificado: '.$e->getMessage());
 
         if (request()->ajax()) {
-            return response()->json(['success' => false, 'message' => 'Error al eliminar el certificado.']);
+            return response()->json(['success' => false, 'message' => 'Error deleting certificate.']);
         }
 
-        return back()->with('error', 'Error al eliminar el certificado.');
+        return back()->with('error', 'Error deleting certificate.');
     }
 }
 
