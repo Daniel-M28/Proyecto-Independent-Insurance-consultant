@@ -112,6 +112,21 @@
                     </div>
                 </div>
 
+                         <!-- Date of Birth -->
+             <div>
+                 <label class="block mb-1 font-semibold">Date of birth</label>
+                 <input 
+                     type="date" 
+                     name="dob"  
+                     max="<?php echo e(date('Y-m-d')); ?>" 
+                     value="<?php echo e(old('dob')); ?>" 
+                     class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md text-gray-300" 
+                     required
+                     oninvalid="this.setCustomValidity('Date of birth is required')"
+                     oninput="this.setCustomValidity('')"
+                 >
+             </div>
+
                 <!-- SSN -->
                 <div>
                     <label class="block mb-1 font-semibold">SSN</label>
@@ -119,12 +134,8 @@
                            class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400">
                 </div>
 
-                <!-- Date of Birth -->
-                <div>
-                    <label class="block mb-1 font-semibold">Date of Birth</label>
-                    <input type="date" name="dob" value="<?php echo e(old('dob')); ?>" required
-                           class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md text-gray-200">
-                </div>
+                
+                
 
                 <!-- License Upload -->
                 <div class="mb-4">

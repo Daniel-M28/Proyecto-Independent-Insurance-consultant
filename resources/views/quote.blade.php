@@ -361,27 +361,7 @@
 <!-- Formulario Auto Personal -->
  
 
- @if(session('success'))
-    <div class="hidden lg:block mb-4 p-3 bg-green-600 text-white rounded">
-        {{ session('success') }}
-    </div>
-@endif
 
-@if(session('error'))
-    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if($errors->any())
-    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
-        <ul class="list-disc pl-5">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
 <form 
     id="form-personal" 

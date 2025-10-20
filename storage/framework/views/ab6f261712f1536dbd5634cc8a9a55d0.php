@@ -172,7 +172,7 @@
       </div>
 
       <div class="bg-zinc-800 p-6 rounded-2xl shadow-md transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:bg-zinc-700/90">
-        <h3 class="text-xl font-semibold mb-1">Gorge Perez Reyes</h3>
+        <h3 class="text-xl font-semibold mb-1">George Perez Reyes</h3>
         <h6 class="text-sm text-gray-400 mb-4">Greenwood, IN</h6>
         <p class="text-gray-300 text-sm leading-relaxed">“With Independent Insurance Consultant I feel at ease. They not only helped me with my truck insurance but also with all the regulatory paperwork. They explained everything step by step and made sure everything was done right.”</p>
       </div>
@@ -200,12 +200,11 @@
     <div class="w-full md:w-1/2 px-8 py-10 flex flex-col justify-center mt-16 md:mt-0">
       <h3 class="text-2xl font-semibold mb-4">FIND US</h3>
       <p class="text-gray-300 mb-6">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, laboriosam doloremque odio delectus.
       </p>
       <div class="text-gray-400 space-y-2 text-sm">
         <p><span class="pr-2">📍</span> 7399 N. Shadeland Avenue. #230, Indianapolis, IN 46250</p>
         <p><span class="pr-2">📞</span> (765) 244-5222</p>
-        <p><span class="pr-2">✉️</span> info@website.com</p>
+        <p><span class="pr-2">✉️</span> info@insuranceconsultantapp.com</p>
       </div>
     </div>
   </div>

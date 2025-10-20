@@ -377,29 +377,7 @@ unset($__errorArgs, $__bag); ?>
 <!-- Formulario Auto Personal -->
  
 
- <?php if(session('success')): ?>
-    <div class="hidden lg:block mb-4 p-3 bg-green-600 text-white rounded">
-        <?php echo e(session('success')); ?>
 
-    </div>
-<?php endif; ?>
-
-<?php if(session('error')): ?>
-    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
-        <?php echo e(session('error')); ?>
-
-    </div>
-<?php endif; ?>
-
-<?php if($errors->any()): ?>
-    <div class="hidden lg:block mb-4 p-3 bg-red-600 text-white rounded">
-        <ul class="list-disc pl-5">
-            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <li><?php echo e($error); ?></li>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </ul>
-    </div>
-<?php endif; ?>
 
 <form 
     id="form-personal" 

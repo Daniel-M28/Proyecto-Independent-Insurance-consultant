@@ -29,7 +29,7 @@ return new class extends Migration
         $table->string('make', 30);
         $table->string('model', 30);
         $table->string('body_class', 30);
-        $table->string('license_files')->nullable(); // guardaremos rutas separadas por coma
+        $table->string('license_files')->nullable(); // se guardan las rutas separadas por coma
         $table->text('observations')->nullable();
         $table->timestamps();
     });

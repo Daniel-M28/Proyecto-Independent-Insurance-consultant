@@ -23,8 +23,8 @@ return new class extends Migration
         $table->string('yard', 100)->nullable();
         $table->integer('miles')->nullable();
         $table->string('type_of_load')->nullable();
-        $table->json('coverages')->nullable(); // guardamos como JSON
-        $table->json('licenses')->nullable();  // guardamos nombres de archivos
+        $table->json('coverages')->nullable(); // se guardan como JSON
+        $table->json('licenses')->nullable();  // se guardan los nombres de archivos
         $table->text('comments')->nullable();
         $table->timestamps();
     });

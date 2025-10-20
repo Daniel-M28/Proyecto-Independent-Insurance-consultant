@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    protected $table = 'new_companies'; // Nombre de la nueva tabla
+    protected $table = 'new_companies'; 
     protected $fillable = [
         'company_name_1',
         'company_name_2',
@@ -22,7 +22,7 @@ class Company extends Model
         'operation_type',
         'vehicle_type',
         'observations',
-        'licenses', // si la columna es JSON
+        'licenses', //  la columna es JSON
     ];
 
     protected $casts = [

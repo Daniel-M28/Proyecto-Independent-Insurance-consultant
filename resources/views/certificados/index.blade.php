@@ -5,6 +5,7 @@
     <div class="w-full max-w-5xl bg-[#1e1e1e] p-6 rounded-xl shadow-lg">
         <h1 class="text-2xl font-semibold text-white mb-6 text-center">Management of Insurance Certificates</h1>
 
+{{-- mensajes flash--}}
          @if(session('success'))
             <div class="bg-green-600 text-white p-3 rounded mb-4 text-center">{{ session('success') }}</div>
         @endif
@@ -13,8 +14,8 @@
             @endif   
 
 
-     {{-- Admin y Asesor --}}
-@if(auth()->user()->hasRole('administrador') || auth()->user()->hasRole('asesor'))
+{{-- Admin y Asesor --}}
+    @if(auth()->user()->hasRole('administrador') || auth()->user()->hasRole('asesor'))
     {{-- Buscador --}}
     <form method="GET" action="{{ route('certificados.index') }}" class="flex justify-center flex-1 mb-6">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Search user by name or email"
@@ -62,7 +63,7 @@
     @endif
 @endif
 
-<!-- Modal centralizado de envío -->
+<!-- Modal de envío -->
 <div id="sendingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-blue-600 text-white px-8 py-6 rounded-lg shadow-lg flex items-center space-x-4 w-96">
         <!-- Spinner -->
@@ -75,7 +76,7 @@
 </div>
 
 
-<!-- Toast notification envio completado -->
+<!-- Toast notification de envio completado -->
 <div id="toast" class="hidden fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
     <div class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
         <span id="toastMessage">Correo enviado correctamente</span>
@@ -136,6 +137,7 @@
                     required></textarea>
                 <p id="contador" class="text-sm text-gray-400 mt-1 text-right">0 / 120 characters</p>
             </div> 
+
             <!--Scripts para el textarea Placeholder-->
                   <script>
                     const textarea = document.getElementById('empresa');
@@ -157,7 +159,7 @@
                       // Asigna el texto final
                       textarea.value = finalText;
                   
-                      // Actualiza contador
+                      // Actualiza contador de caracteres
                       contador.textContent = `${finalText.length} / 120 caracteres`;
                     });
                   </script>

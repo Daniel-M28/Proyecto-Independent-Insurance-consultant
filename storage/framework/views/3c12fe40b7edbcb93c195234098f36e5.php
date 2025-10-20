@@ -5,7 +5,7 @@
     <title>Certificado</title>
 </head>
 <body>
-<p>Good afternoon 
+<p>Good day
 <br>
 I attached the COI required.
 <br>

@@ -9,7 +9,7 @@ To complete your registration, please confirm your account by clicking the butto
 Confirm your account
 @endcomponent
 
-If you didn’t register, you can ignore this email.
+If you didn't register, you can ignore this email.
 
 Thanks,<br>
 Independent Insurance Consultant
