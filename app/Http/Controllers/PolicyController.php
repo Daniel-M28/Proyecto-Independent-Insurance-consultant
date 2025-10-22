@@ -82,17 +82,30 @@ class PolicyController extends Controller
      * Eliminar PDF y registro (solo admin)
      */
     public function destroy(Policy $policy)
-    {
-        $this->authorize('edit-name'); // solo admin
+{
+    $this->authorize('edit-name'); // solo admin
 
-        // Eliminar archivo físico si existe
-        if (Storage::disk('public')->exists($policy->file_path)) {
-            Storage::disk('public')->delete($policy->file_path);
+    try {
+        if (!empty($policy->file_path)) {
+            // Normalizar la ruta relativa al disco 'public'
+            $filePath = preg_replace('#^(public/|storage/)#', '', $policy->file_path);
+
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            } else {
+                \Log::warning("Archivo de policy no encontrado al intentar eliminar: ".$filePath);
+            }
         }
 
-        // Eliminar registro de la DB
+        // Eliminar registro de la base de datos
         $policy->delete();
 
         return back()->with('success', 'Policy successfully deleted.');
+
+    } catch (\Exception $e) {
+        \Log::error('Error al eliminar policy: '.$e->getMessage());
+        return back()->with('error', 'Error deleting policy.');
     }
+}
+
 }

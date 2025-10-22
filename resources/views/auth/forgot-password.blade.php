@@ -6,8 +6,16 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('password.email') }}">
+    <form method="POST" action="{{ route('password.email') }}" id="passwordForm">
         @csrf
+
+        <!-- Contenedor del spinner -->
+        <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-white font-semibold text-lg">Submitting request...</span>
+            </div>
+        </div>
 
         <!-- Email Address -->
         <div>
@@ -22,4 +30,19 @@
             </x-primary-button>
         </div>
     </form>
+
+    <!-- Script para manejar el spinner -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('passwordForm');
+        const loader = document.getElementById('loader');
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', () => {
+            loader.classList.remove('hidden'); // mostrar spinner
+            submitButton.disabled = true;      // desactivar botón
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    });
+    </script>
 </x-guest-layout>

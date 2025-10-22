@@ -16,4 +16,10 @@ class Factoring extends Model
         'phone_number',
         'observations',
     ];
+
+public function users()
+{
+    return $this->belongsToMany(User::class, 'factoring_user');
+}
+
 }

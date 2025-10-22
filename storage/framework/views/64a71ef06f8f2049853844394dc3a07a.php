@@ -6,15 +6,15 @@
 <div class="flex flex-col items-center justify-center min-h-[70vh] text-center">
     <img src="<?php echo e(asset('imgs/error.png')); ?>" alt="Error 419" class="w-48 md:w-64 mb-6 mt-24">
 
-    <h1 class="text-4xl font-bold mb-3 text-gray-100">Sesión expirada</h1>
+    <h1 class="text-4xl font-bold mb-3 text-gray-100">Session expired</h1>
 
     <p class="text-gray-400 mb-8 max-w-md">
-        Tu sesión ha expirado por inactividad o por motivos de seguridad.  
-        Por favor, actualiza la página o inicia sesión nuevamente.
+        Your session has expired due to inactivity or security reasons.
+        Please refresh the page or log in again.
     </p>
 
     <a href="<?php echo e(route('login')); ?>" class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-        Iniciar sesión
+       Return to the beginning
     </a>
 </div>
 <?php $__env->stopSection(); ?>

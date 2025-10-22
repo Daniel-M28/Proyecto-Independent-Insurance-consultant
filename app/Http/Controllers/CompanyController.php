@@ -4,23 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
+use App\Models\User;
 
 class CompanyController extends Controller
 {
-    // Mostrar el listado de todas las solicitudes
+    // Mostrar listado según el rol
     public function index()
     {
-        $companies = Company::orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.new-company.index', compact('companies'));
+        if (auth()->user()->hasRole('administrador')) {
+            $companies = Company::with('users')->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $companies = Company::whereHas('users', function ($query) {
+                $query->where('user_id', auth()->id());
+            })->with('users')->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        // Solo los asesores disponibles
+        $asesores = User::role('asesor')->get();
+
+        return view('admin.new-company.index', compact('companies', 'asesores'));
     }
 
-    // Mostrar formulario para crear nueva solicitud
+    //  Asignar asesor (o dejar “no asignado”)
+    public function assign(Request $request, $id)
+    {
+        $company = Company::findOrFail($id);
+
+        // Si no se selecciona asesor, se elimina la relación
+        if (!$request->asesor_id) {
+            $company->users()->detach();
+        } else {
+            $company->users()->sync([$request->asesor_id]);
+        }
+
+        return redirect()->route('admin.new-company.index')->with('success', 'Asesor actualizado correctamente');
+    }
+
+    // Resto del código original ↓↓↓
+
     public function create()
     {
         return view('admin.new-company.create');
     }
 
-    // Guardar nueva solicitud
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -38,10 +64,9 @@ class CompanyController extends Controller
             'operation_type' => 'required',
             'vehicle_type' => 'required',
             'observations' => 'nullable|max:500',
-            'licenses.*' => 'file|mimes:jpeg,jpg,png,pdf|max:5120', // 5MB
+            'licenses.*' => 'file|mimes:jpeg,jpg,png,pdf|max:5120',
         ]);
 
-        // Manejar archivos y guardarlos en un array
         $licensePaths = [];
         if ($request->hasFile('licenses')) {
             if (count($request->file('licenses')) > 4) {
@@ -53,35 +78,40 @@ class CompanyController extends Controller
             }
         }
 
-        // Guardar la empresa, incluyendo los archivos en formato JSON
         $validated['licenses'] = $licensePaths;
         Company::create($validated);
 
-         return redirect()->back()->with('success', 'Quote request submitted successfully ');
+        return redirect()->back()->with('success', 'Quote request submitted successfully ');
     }
 
-    // Mostrar detalles de una solicitud
     public function show($id)
     {
         $company = Company::findOrFail($id);
         return view('admin.new-company.show', compact('company'));
     }
 
-    // Eliminar una solicitud
     public function destroy($id)
-    {
-        $company = Company::findOrFail($id);
+{
+    $company = Company::findOrFail($id);
 
-        // Eliminar archivos del storage
-        if (!empty($company->licenses)) {
-            foreach ($company->licenses as $file) {
-                \Storage::disk('public')->delete($file);
+    if (!empty($company->licenses)) {
+        foreach ($company->licenses as $file) {
+            // Normalizar ruta relativa al disco 'public'
+            $filePath = preg_replace('#^(public/|storage/)#', '', $file);
+
+            if (\Storage::disk('public')->exists($filePath)) {
+                \Storage::disk('public')->delete($filePath);
+            } else {
+                \Log::warning("Archivo no encontrado al intentar eliminar: ".$filePath);
             }
         }
-
-        $company->delete();
-
-        return redirect()->route('admin.new-company.index')
-                         ->with('success', 'Company request deleted successfully!');
     }
+
+    // Eliminar el registro en la base de datos
+    $company->delete();
+
+    return redirect()->route('admin.new-company.index')
+                     ->with('success', 'Company request deleted successfully!');
+}
+
 }

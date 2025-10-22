@@ -38,9 +38,9 @@
 </div>
 
 
-            <h1 class="text-4xl font-bold mb-6">Creación de nueva compañía</h1>
+            <h1 class="text-4xl font-bold mb-6">Creation of a new company</h1>
             <p class="text-lg leading-relaxed">
-                Proporciona la siguiente información para crear tu nueva compañía. Completa cada campo con los datos solicitados. Nos pondremos en contacto contigo lo antes posible.
+               Provide the following information to create your new company. Complete each field with the requested information. We will contact you as soon as possible.
             </p>
             <img src="{{ asset('imgs/blog-2.jpeg') }}" alt="Cotización" class="mt-8 w-full max-w-md mx-auto lg:mx-0 h-auto rounded-lg shadow-md">
         </div>
@@ -123,12 +123,36 @@
                  >
              </div>
 
-                <!-- SSN -->
-                <div>
-                    <label class="block mb-1 font-semibold">SSN</label>
-                    <input type="text" name="ssn" placeholder="Example: 123-45-6789" value="{{ old('ssn')}}" required maxlength="11"
-                           class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400">
-                </div>
+               <!-- SSN -->
+<div>
+    <label class="block mb-1 font-semibold">SSN</label>
+    <input type="text" name="ssn" placeholder="Example: 123-45-6789" value="{{ old('ssn')}}" required maxlength="11"
+        class="w-full p-3 bg-zinc-800 border border-gray-600 rounded-md placeholder-gray-400"
+        id="ssnInput">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const ssnInput = document.getElementById('ssnInput');
+
+    ssnInput.addEventListener('input', (e) => {
+        let value = ssnInput.value.replace(/\D/g, ''); // Eliminar todo lo que no sea número
+
+        // Limitar a 9 dígitos
+        if (value.length > 9) value = value.slice(0, 9);
+
+        // Agregar guiones en las posiciones correctas
+        if (value.length > 5) {
+            value = value.replace(/(\d{3})(\d{2})(\d{0,4})/, '$1-$2-$3');
+        } else if (value.length > 3) {
+            value = value.replace(/(\d{3})(\d{0,2})/, '$1-$2');
+        }
+
+        ssnInput.value = value;
+    });
+});
+</script>
+
 
                 
                 
@@ -139,7 +163,7 @@
                         Owner license
                     </label>
                     <input type="file" id="licenses-commercial" name="licenses[]" multiple accept=".jpeg,.jpg,.png,.pdf"
-                           class="block w-full text-gray-300 mt-2 border border-gray-600 rounded p-2">
+                           class="block w-full text-gray-300 mt-2 border border-gray-600 rounded p-2" required>
                     <small class="text-gray-400">Allowed formats: JPG, PNG, PDF. Max 4 files, 5MB each.</small>
                     @error('licenses')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

@@ -29,4 +29,13 @@ class CommercialRequest extends Model
         'coverages' => 'array',
         'licenses'  => 'array',
     ];
+
+
+public function users()
+{
+    return $this->belongsToMany(User::class, 'commercial_request_user');
+}
+
+
+
 }

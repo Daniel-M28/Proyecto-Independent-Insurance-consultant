@@ -56,7 +56,7 @@ class UserController extends Controller
             'roles.*' => ['exists:roles,id'],
         ]);
 
-        // Crear usuario (hasheamos la contraseña explícitamente)
+        // Crear usuario (hashear contraseña )
         $user = User::create([
             'name' => $data['name'],
             'lastname' => $data['lastname'] ?? null,
@@ -72,7 +72,7 @@ class UserController extends Controller
         // si no seleccionó roles, tu booted() asignará 'usuario' automáticamente
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Usuario creado correctamente.');
+            ->with('success', 'User created successfully.');
     }
 
 
@@ -117,7 +117,7 @@ class UserController extends Controller
     $user->roles()->sync($request->input('roles', []));
 
     return redirect()->route('admin.users.index')
-        ->with('success', 'El usuario se actualizó correctamente.');
+        ->with('success', 'The user was updated successfully.');
 }
 
 
@@ -130,7 +130,7 @@ class UserController extends Controller
     $user->delete();
 
     return redirect()->route('admin.users.index')
-        ->with('success', 'Usuario eliminado correctamente.');
+        ->with('success', 'User successfully deleted.');
 }
 
 }

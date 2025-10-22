@@ -58,7 +58,7 @@ class ProfileController extends Controller
     // Validar que el usuario haya ingresado su contraseña correctamente
     if (! Hash::check($request->password, $user->password)) {
         return back()
-            ->withErrors(['password' => 'La contraseña ingresada es incorrecta.'], 'userDeletion');
+            ->withErrors(['password' => 'The password entered is incorrect.'], 'userDeletion');
     }
 
     // Cerrar sesión

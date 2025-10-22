@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    protected $table = 'new_companies'; 
+    protected $table = 'new_companies';
+
     protected $fillable = [
         'company_name_1',
         'company_name_2',
@@ -22,10 +23,17 @@ class Company extends Model
         'operation_type',
         'vehicle_type',
         'observations',
-        'licenses', //  la columna es JSON
+        'licenses',
     ];
 
     protected $casts = [
-    'licenses' => 'array',
-];
+        'licenses' => 'array',
+    ];
+
+    //  Relación con usuarios (asesores)
+    public function users()
+{
+    return $this->belongsToMany(User::class, 'company_user');
+}
+
 }

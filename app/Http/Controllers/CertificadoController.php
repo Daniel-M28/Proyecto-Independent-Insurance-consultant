@@ -92,7 +92,7 @@ $pdfUrls = [];      // nunca null
             Mail::to($email)->send(new \App\Mail\CertificadoPdfMail($fileName));
         }
 
-        // Limpieza opcional del archivo temporal después de enviar
+        // Limpieza del archivo temporal después de enviar
         Storage::delete($path);
 
         return response()->json(['message' => 'Certificate sent successfully']);
@@ -109,20 +109,26 @@ $pdfUrls = [];      // nunca null
     public function destroy(Certificado $certificado)
 {
     try {
-        // Solo si tiene ruta válida
-        if (!empty($certificado->file_path) && Storage::disk('public')->exists($certificado->file_path)) {
-            Storage::disk('public')->delete($certificado->file_path);
+        if (!empty($certificado->file_path)) {
+            // Normalizar la ruta relativa al disco 'public'
+            $filePath = preg_replace('#^(public/|storage/)#', '', $certificado->file_path);
+
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            } else {
+                \Log::warning("Archivo de certificado no encontrado al intentar eliminar: ".$filePath);
+            }
         }
 
-        // Eliminar el registro de la BD
+        // Eliminar el registro de la base de datos
         $certificado->delete();
 
-        // Si fue una petición AJAX, devolver JSON
+        // Respuesta según tipo de petición
         if (request()->ajax()) {
             return response()->json(['success' => true, 'message' => 'Certificate successfully deleted.']);
         }
 
-        return back()->with('success', 'Certificate successfully deleted..');
+        return back()->with('success', 'Certificate successfully deleted.');
 
     } catch (\Exception $e) {
         \Log::error('Error al eliminar certificado: '.$e->getMessage());

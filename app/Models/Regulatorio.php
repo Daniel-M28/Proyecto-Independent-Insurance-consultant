@@ -13,4 +13,13 @@ class Regulatorio extends Model
         'phone_number',
         'observations',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'regulatorio_user');
+    }
+
+    
 }
+
+

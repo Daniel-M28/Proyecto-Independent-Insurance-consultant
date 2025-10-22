@@ -8,18 +8,18 @@
     <img src="<?php echo e(asset('imgs/error.png')); ?>" alt="Error 404" class="w-48 md:w-64 mb-6 mt-24">
 
     
-    <h1 class="text-4xl font-bold mb-3 text-gray-100">Oops! Página no encontrada</h1>
+    <h1 class="text-4xl font-bold mb-3 text-gray-100">Oops! Page not found</h1>
 
     
     <p class="text-gray-400 mb-8 max-w-md">
-        La página que estás buscando no existe o fue movida.  
-        Por favor, verifica la dirección o vuelve al inicio.
+        The page you're looking for doesn't exist or has been moved.
+        Please check the address or return to the top.
     </p>
 
     
     <a href="<?php echo e(url('/')); ?>"
        class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-        Volver al inicio
+        Return to the beginning
     </a>
 </div>
 <?php $__env->stopSection(); ?>

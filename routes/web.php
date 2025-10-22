@@ -66,6 +66,10 @@ Route::get('/admin/regulatorios', [RegulatorioController::class, 'index'])
     ->name('admin.regulatorios');
 
 Route::resource('regulatorios', RegulatorioController::class);
+// Asignar asesor a solicitud regulatoria
+Route::post('/regulatorios/{id}/assign', [RegulatorioController::class, 'assign'])
+    ->name('regulatorios.assign');
+
 
 // formulario factoring
 // Guardar solicitud
@@ -75,6 +79,11 @@ Route::post('/factoring', [FactoringController::class, 'store'])->name('factorin
 Route::get('/admin/factoring', [FactoringController::class, 'index'])->name('admin.factoring');
 
 Route::resource('factorings', FactoringController::class);
+
+Route::post('/factorings/{id}/assign', [FactoringController::class, 'assign'])
+    ->name('factorings.assign');
+
+
 
 require __DIR__ . '/auth.php';
 
@@ -91,6 +100,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::delete('/commercial-requests/{id}', [CommercialAdminController::class, 'destroy'])
         ->name('commercial.destroy');
+
+   Route::post('/commercial-requests/{id}/assign', [CommercialAdminController::class, 'assign'])->name('commercial.assign');
 });
 
 // forumulario personal quote
@@ -106,6 +117,9 @@ Route::prefix('admin')->group(function () {
 
     Route::delete('/personal-quotes/{id}', [PersonalQuoteController::class, 'destroy'])
         ->name('admin.personal-quotes.destroy');
+
+         Route::post('/personal-quotes/{id}/assign', [PersonalQuoteController::class, 'assign'])
+        ->name('admin.personal-quotes.assign');
 });
 
 // Formulario nueva compañia
@@ -130,6 +144,9 @@ Route::prefix('admin')->group(function () {
     // Eliminar una solicitud
     Route::delete('/new-company/{id}', [CompanyController::class, 'destroy'])
         ->name('admin.new-company.destroy');
+
+    Route::post('/new-company/{id}/assign', [CompanyController::class, 'assign'])
+    ->name('admin.new-company.assign');
 });
 
 // Ruta para verificar usuario temporal

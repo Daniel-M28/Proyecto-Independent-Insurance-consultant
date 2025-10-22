@@ -74,4 +74,36 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new CustomResetPassword($token));
     }
 
+
+// Relaciones con otros modelos
+
+//relación muchos a muchos con Factoring
+public function factorings()
+{
+    return $this->belongsToMany(Factoring::class, 'factoring_user');
+}
+
+//relación muchos a muchos con Regulatorio
+public function regulatorios()
+{
+    return $this->belongsToMany(Regulatorio::class, 'regulatorio_user');
+}
+
+public function companies()
+{
+    return $this->belongsToMany(Company::class, 'company_user');
+}
+
+public function commercialRequests()
+{
+    return $this->belongsToMany(CommercialRequest::class, 'commercial_request_user');
+
+}
+
+public function personalQuotes()
+{
+    return $this->belongsToMany(PersonalQuote::class, 'personal_quote_user');
+}
+
+
 }

@@ -29,4 +29,11 @@ class PersonalQuote extends Model
     protected $casts = [
         'license_files' => 'array', //   convierte JSON <-> array automáticamente
     ];
+
+public function users()
+{
+    return $this->belongsToMany(User::class, 'personal_quote_user');
+}
+
+
 }

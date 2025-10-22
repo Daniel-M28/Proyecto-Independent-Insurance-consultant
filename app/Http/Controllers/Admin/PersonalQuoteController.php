@@ -5,27 +5,43 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PersonalQuote;
+use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class PersonalQuoteController extends Controller
 {
-    // Mostrar lista de cotizaciones personales
+    // Listar todas las cotizaciones personales
     public function index()
-    {
-        $quotes = PersonalQuote::latest()->paginate(10); 
-        return view('admin.personal-quotes.index', compact('quotes'));
+{
+    $user = auth()->user();
+
+    if ($user->hasRole('administrador')) {
+        
+        $quotes = PersonalQuote::with('users')->latest()->paginate(10);
+    } elseif ($user->hasRole('asesor')) {
+        // Asesor ve solo los registros asignados a él
+        $quotes = $user->personalQuotes()->with('users')->latest()->paginate(10);
+    } else {
+        
+        abort(403, 'No autorizado');
     }
 
+    
+    $asesores = $user->hasRole('administrador') ? User::role('asesor')->get() : collect();
+
+    return view('admin.personal-quotes.index', compact('quotes', 'asesores'));
+}
+
+
+    // Mostrar detalle de una cotización
     public function show($id)
     {
         $quote = PersonalQuote::findOrFail($id);
-
-        // ✅ Ya no usamos explode, porque license_files ya es un array (JSON cast)
         $licenses = $quote->license_files ?? [];
-
         return view('admin.personal-quotes.show', compact('quote', 'licenses'));
     }
 
-    // Guardar nueva cotización
+    // Guardar nueva cotización desde el formulario
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -50,7 +66,7 @@ class PersonalQuoteController extends Controller
             'observations'      => 'nullable|string|max:500',
         ]);
 
-        // Guardar archivos
+        // Guardar archivos en storage
         $paths = [];
         if ($request->hasFile('license-personal')) {
             foreach ($request->file('license-personal') as $file) {
@@ -58,26 +74,54 @@ class PersonalQuoteController extends Controller
             }
         }
 
-        // Guardar como JSON (se castea automáticamente a array en el modelo)
+        // Guardar como JSON en la columna license_files
         $validated['license_files'] = $paths;
 
-        // Guardar en BD
+        // Crear registro en la base de datos
         PersonalQuote::create($validated);
 
-        return back()->with('success', 'Your personal quote has been submitted successfully!');
+        return back()->with('success', 'Your personal quote has been sent successfully.');
     }
 
+    // Eliminar cotización
     public function destroy($id)
-    {
-    $request = PersonalQuote::findOrFail($id);
-    $request->delete();
+{
+    $quote = PersonalQuote::findOrFail($id);
 
-    return redirect()->route('admin.personal-quotes.index')
-                     ->with('success', 'request successfully deleted');
+    try {
+        // Eliminar archivos de license_files si existen
+        if (!empty($quote->license_files)) {
+            foreach ($quote->license_files as $file) {
+                // Normalizar ruta relativa al disco 'public'
+                $filePath = preg_replace('#^(public/|storage/)#', '', $file);
+
+                if (\Storage::disk('public')->exists($filePath)) {
+                    \Storage::disk('public')->delete($filePath);
+                } else {
+                    \Log::warning("Archivo de license_files no encontrado al intentar eliminar: ".$filePath);
+                }
+            }
+        }
+
+        // Eliminar registro de la BD
+        $quote->delete();
+
+        return redirect()->route('admin.personal-quotes.index')
+                         ->with('success', 'Quote successfully deleted');
+
+    } catch (\Exception $e) {
+        \Log::error('Error al eliminar PersonalQuote: '.$e->getMessage());
+        return back()->with('error', 'Error deleting quote.');
     }
-
-
-
 }
 
 
+    // Asignar asesor (opcional)
+    public function assign(Request $request, $id)
+    {
+        $quote = PersonalQuote::findOrFail($id);
+        $asesorId = $request->asesor_ids[0] ?? null;
+        $quote->users()->sync($asesorId ? [$asesorId] : []);
+        return redirect()->back()->with('success','Advisor assigned correctly');
+    }
+}
