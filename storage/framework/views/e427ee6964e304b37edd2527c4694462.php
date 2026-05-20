@@ -168,11 +168,11 @@
 
 
         <nav class="space-y-3 mt-8">
-            <a href="<?php echo e(url('/')); ?>#home" class="block hover:text-gray-300 transition">Home</a>
-            <a href="<?php echo e(url('/')); ?>#about" class="block hover:text-gray-300 transition">About</a>
-            <a href="<?php echo e(url('/')); ?>#services" class="block hover:text-gray-300 transition">Services</a>
-            <a href="<?php echo e(url('/')); ?>#testmonial" class="block hover:text-gray-300 transition">Reviews</a>
-            <a href="<?php echo e(url('/')); ?>#contact" class="block hover:text-gray-300 transition">Contact Us</a>
+            <a href="<?php echo e(url('/')); ?>#home" class="mobile-link block hover:text-gray-300 transition">Home</a>
+            <a href="<?php echo e(url('/')); ?>#about" class="mobile-link block hover:text-gray-300 transition">About</a>
+            <a href="<?php echo e(url('/')); ?>#services" class="mobile-link block hover:text-gray-300 transition">Services</a>
+            <a href="<?php echo e(url('/')); ?>#testmonial" class="mobile-link block hover:text-gray-300 transition">Reviews</a>
+            <a href="<?php echo e(url('/')); ?>#contact" class="mobile-link block hover:text-gray-300 transition">Contact Us</a>
         </nav>
 
         <div class="border-t border-gray-700 pt-4">
@@ -193,7 +193,7 @@
                     </div>
                 <?php else: ?>
                     <div class="flex flex-col space-y-2">
-                        <a href="<?php echo e(route('login')); ?>" class="block bg-blue-700 hover:bg-blue-800 text-center rounded-lg py-2 transition">Log in</a>
+                        <a href="<?php echo e(route('login')); ?>" class="block bg-green-700 hover:bg-green-800 text-center rounded-lg py-2 transition">Log in</a>
                         <?php if(Route::has('register')): ?>
                             <a href="<?php echo e(route('register')); ?>" class="block bg-blue-700 hover:bg-blue-800 text-center rounded-lg py-2 transition">Register</a>
                         <?php endif; ?>
@@ -263,7 +263,30 @@
       'google_translate_element'
     );
   }
+
+
+  
 </script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            // Desmarcar el checkbox
+            menuToggle.checked = false;
+
+            // Ocultar el menú
+            mobileMenu.classList.add('hidden');
+        });
+    });
+});
+</script>
+
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 

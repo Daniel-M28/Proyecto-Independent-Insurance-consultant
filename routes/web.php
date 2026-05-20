@@ -66,6 +66,7 @@ Route::get('/admin/regulatorios', [RegulatorioController::class, 'index'])
     ->name('admin.regulatorios');
 
 Route::resource('regulatorios', RegulatorioController::class);
+
 // Asignar asesor a solicitud regulatoria
 Route::post('/regulatorios/{id}/assign', [RegulatorioController::class, 'assign'])
     ->name('regulatorios.assign');

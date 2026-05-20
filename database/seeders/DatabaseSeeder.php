@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
         ]);
 
-        // Crear usuarios de prueba con factory
-        \App\Models\User::factory()->count(10)->create();
 
         //  Crear usuario administrador
         $adminRole = Role::firstOrCreate(['name' => 'administrador']);
